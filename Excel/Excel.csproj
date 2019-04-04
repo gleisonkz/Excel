@@ -118,5 +118,8 @@
   <ItemGroup>
     <None Include="Resources\Folder-Documents-icon %281%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\icons8-editar-propriedade-64.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

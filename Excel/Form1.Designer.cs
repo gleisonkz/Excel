@@ -83,6 +83,7 @@
             // 
             this.button1.BackgroundImage = global::Excel.Properties.Resources.Misc_file_txt_icon;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(652, 329);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
