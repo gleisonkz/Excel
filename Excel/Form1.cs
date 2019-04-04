@@ -9,9 +9,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System.Data.OleDb;
 using System.IO;
 
 namespace Excel
@@ -50,12 +47,12 @@ namespace Excel
 
             using (StreamWriter sw = new StreamWriter(outputFilePath, false))
             {
-                for (int i = 0; i < dt.Columns.Count; i++)
-                {
-                    sw.Write(dt.Columns[i].ColumnName.PadRight(maxLengths[i] + 2));
-                }
+                //for (int i = 0; i < dt.Columns.Count; i++)
+                //{
+                //    sw.Write(dt.Columns[i].ColumnName.PadRight(maxLengths[i] + 2));
+                //}
 
-                sw.WriteLine();
+                //sw.WriteLine();
 
                 foreach (DataRow row in dt.Rows)
                 {
@@ -63,7 +60,12 @@ namespace Excel
                     {
                         if (!row.IsNull(i))
                         {
-                            sw.Write(row[i].ToString().PadRight(maxLengths[i] + 2));
+                            sw.Write(row[i].ToString());
+                            if ( i % 2 == 0)
+                            {
+                                sw.Write('\t');
+                            }
+                            
                         }
                         else
                         {
@@ -72,6 +74,7 @@ namespace Excel
                     }
 
                     sw.WriteLine();
+
                 }
 
                 sw.Close();
@@ -82,19 +85,28 @@ namespace Excel
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (selectedFolder == null)
+            {
+                MessageBox.Show("É necessario primeiro selecionar o caminho onde estão os arquivos",
+                    "Atenção",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                return;
+            }
 
             string[] planilhas = Directory.GetFiles(selectedFolder, "*.xlsx");
-            string caminhotxt = (selectedFolder + @"\Exported.txt");
+            string caminhotxt = (selectedFolder + $@"\Exported_{DateTime.Today.ToString("dd-MM-yyyy")}.txt");
+            string caminhotxtCont = (selectedFolder + $@"\Exported_{DateTime.Today.ToString("dd-MM-yyyy")}-CONTADOR.txt");
             string worksheet = "Sheet1";
 
 
             //Create a new DataTable.
             DataTable dt = new DataTable();
+            DataTable dtCont = new DataTable();
 
             //Criando um array de Colunas            
             var columns = new[] { new DataColumn("CNPJ"), new DataColumn("EMAIL") };
+            var columnsCont = new[] { new DataColumn("CNPJ"), new DataColumn("EMAIL") };
             dt.Columns.AddRange(columns);
-
+            dtCont.Columns.AddRange(columnsCont);
 
             //Criando as colunas de forma manual
             //dt.Columns.Add("CNPJ");
@@ -122,7 +134,7 @@ namespace Excel
                         {
                             //Cria um ojbeto constendo uma regular expression que remove os caracteres especiais
 
-                            System.Text.RegularExpressions.Regex obj = new System.Text.RegularExpressions.Regex(@"\W");
+                            Regex obj = new System.Text.RegularExpressions.Regex(@"\W");
 
                             var indexCells = 0;
 
@@ -153,7 +165,7 @@ namespace Excel
 
                             foreach (var item in lst)
                             {
-                                string email = null;
+                                string email = string.Empty;
                                 foreach (IXLCell cell in celulas)
                                 {
                                     try
@@ -181,11 +193,19 @@ namespace Excel
 
                                 indexCells = 0;
 
-                                //Verifica se o EMAIL e CNPJ são diferentes de vazio ou nullos
+                                //Verifica se o EMAIL e CNPJ são diferentes de vazio ou nullos e remove os que constem "SIND"
+                                
+                                bool contemSIND = email.Contains("SIND");
+                                bool contemCONT = email.Contains("CONT");
 
-                                if (cnpj != "" && email != "" && email != null)
+                                if (cnpj != "" && email != "" && email != null && contemSIND == false && contemCONT == false)
                                 {
                                     dt.Rows.Add(new object[2] { cnpj, email });
+                                }
+
+                                if (contemCONT)
+                                {
+                                    dtCont.Rows.Add(new object[2] { cnpj, email });
                                 }
                             }
                         }
@@ -197,12 +217,16 @@ namespace Excel
 
 
             var array = columns.Select(c => c.ColumnName).ToArray();
+            var arrayCont = columnsCont.Select(c => c.ColumnName).ToArray();
+
 
             dt = dt.DefaultView.ToTable(true, array); // retornar o DataTable removendo as linhas duplicadas
+            dtCont = dtCont.DefaultView.ToTable(true, arrayCont);
 
             dataGridView1.DataSource = dt;
             Write(dt, caminhotxt);
-            MessageBox.Show("Informações exportadas para " + caminhotxt.ToString());
+            Write(dtCont, caminhotxtCont);
+            MessageBox.Show("Informações exportadas para " + selectedFolder.ToString());
 
         }
 
@@ -210,6 +234,10 @@ namespace Excel
         {
             FolderBrowserDialog Abrir = new FolderBrowserDialog();
             Abrir.ShowDialog();
+            if (Abrir.SelectedPath == "" || Abrir.SelectedPath == null)
+            {
+                return;
+            }
             selectedFolder = Abrir.SelectedPath;
             label_caminhoEscolhido.Text = selectedFolder;
         }
