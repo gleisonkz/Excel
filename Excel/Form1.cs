@@ -345,7 +345,7 @@ namespace Excel
         private void btnAbrirClick(object sender, EventArgs e)
         {
             FolderBrowserDialog Abrir = new FolderBrowserDialog();
-            Abrir.RootFolder = Environment.SpecialFolder.MyComputer;
+            Abrir.RootFolder = Environment.SpecialFolder.Desktop;
             var result = Abrir.ShowDialog();
             if(result != DialogResult.OK)
             {
