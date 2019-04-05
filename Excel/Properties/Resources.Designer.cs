@@ -63,9 +63,9 @@ namespace Excel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Folder_Mac_icon {
+        internal static System.Drawing.Bitmap folder_icon {
             get {
-                object obj = ResourceManager.GetObject("Folder_Mac_icon", resourceCulture);
+                object obj = ResourceManager.GetObject("folder_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace Excel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Misc_file_txt_icon {
+        internal static System.Drawing.Bitmap icon {
             get {
-                object obj = ResourceManager.GetObject("Misc_file_txt_icon", resourceCulture);
+                object obj = ResourceManager.GetObject("icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon icon1 {
+            get {
+                object obj = ResourceManager.GetObject("icon1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap txt_icon {
+            get {
+                object obj = ResourceManager.GetObject("txt_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

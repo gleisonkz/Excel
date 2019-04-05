@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
@@ -78,19 +81,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -101,25 +104,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Folders-Windows-Folder-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Files-Txt-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Folder-Mac-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Misc-file-txt-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Folder-Documents-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Folder-Documents-icon %281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\icons8-editar-propriedade-64.ico" />
+    <None Include="Resources\txt-icon.png" />
+    <None Include="Resources\icon.png" />
+    <None Include="Resources\icon.ico" />
+    <Content Include="icon.ico" />
+    <None Include="Resources\folder-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
