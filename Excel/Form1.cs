@@ -67,6 +67,10 @@ namespace Excel
                                 {
                                     lst.Add(indexCells);
                                 }
+                                if (str.ToUpper().Contains("TELEFONE"))
+                                {
+                                    lst.Add(indexCells);
+                                }
 
                                 indexCells++;
                             }
@@ -217,18 +221,22 @@ namespace Excel
 
             string caminhotxt = (selectedFolder + $@"\Exported_{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}.txt");
             string caminhotxtCont = (selectedFolder + $@"\Exported_{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}-CONTADOR.txt");
+            string caminhotxtTelefone = (selectedFolder + $@"\Exported_{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}-TELEFONES.txt");
             string worksheet = "Sheet1";
 
 
             //Create a new DataTable.
             DataTable dt = new DataTable();
             DataTable dtCont = new DataTable();
+            DataTable dtTelefone = new DataTable();
 
             //Criando um array de Colunas            
             var columns = new[] { "CNPJ", "EMAIL" };
+            var columnsTel = new[] { "CNPJ", "TELEFONE" };
 
             dt.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
             dtCont.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            dtTelefone.Columns.AddRange(columnsTel.Select(c => new DataColumn(c)).ToArray());
 
             foreach (var UmaPlanilha in planilhas)
             {
@@ -239,7 +247,8 @@ namespace Excel
                     IXLWorksheet workSheet = workBook.Worksheet(worksheet);
 
                     bool firstRow = true;
-                    var lst = new List<int>(); //Cria uma lista para que sejam armazenados os índices
+                    var lst = new List<int>(); //Cria uma lista para que sejam armazenados os índices das colunas de e-mails
+                    var lstTelefone = new List<int>(); //Cria uma lista para que sejam armazenados os índices das colunas de telefones
 
                     //Loop para percorrer as linhas da planilha.
 
@@ -255,7 +264,7 @@ namespace Excel
 
                             var indexCells = 0;
 
-                            //Percorre por toda a linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
+                            //Percorre por toda a linha para encontrar o(s) índice(s) que contem a palavra E-MAIL e TELEFONE
 
                             foreach (IXLCell cell in row.Cells())
                             {
@@ -264,6 +273,10 @@ namespace Excel
                                 if (str.ToUpper().Contains("EMAIL"))
                                 {
                                     lst.Add(indexCells);
+                                }
+                                if (str.ToUpper().Contains("TELEFONE"))
+                                {
+                                    lstTelefone.Add(indexCells);
                                 }
 
                                 indexCells++;
@@ -277,12 +290,14 @@ namespace Excel
                         {
                             int indexCells = 0;
                             string cnpj = null;
+                            string email = string.Empty;
+                            string telefone = null;
                             var celulas = row.Cells(false); //Retornar a coleção de celulas usadas e não usadas
 
 
                             foreach (var item in lst)
                             {
-                                string email = string.Empty;
+                                
                                 foreach (IXLCell cell in celulas)
                                 {
                                     try
@@ -299,6 +314,8 @@ namespace Excel
                                             email = cell.Value.ToString();
                                             break;
                                         }
+
+
 
                                     }
                                     catch (Exception ex)
@@ -325,6 +342,45 @@ namespace Excel
                                     dtCont.Rows.Add(new object[2] { cnpj, email });
                                 }
                             }
+
+                            // SEGUNDO FOREACH (A SER REMOVIDO) PARA INSERIR OS DADOS DE TELEFONE NO DATATABLE
+
+                            foreach (var itemT in lstTelefone)
+                            {
+
+                                foreach (IXLCell cell in celulas)
+                                {
+                                    try
+                                    {
+                                        //CNPJ
+                                        if (indexCells == 3)
+                                        {
+                                            cnpj = cell.Value.ToString();
+                                        }
+
+                                        //EMAIL
+                                        if (itemT == indexCells)
+                                        {
+                                            telefone = cell.Value.ToString();
+                                            break;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw ex;
+                                    }
+                                    indexCells++;
+                                }
+
+                                indexCells = 0;
+
+                                //Verifica se o CNPJ é diferente de vazio ou nullo
+                               
+                                if (cnpj != "" && telefone != "" && telefone != null ) //adiociona ao DT TELEFONE
+                                {
+                                    dtTelefone.Rows.Add(new object[2] { cnpj, telefone });
+                                }
+                            }
                         }
                     }
                 }
@@ -334,12 +390,13 @@ namespace Excel
 
             dt = dt.DefaultView.ToTable(true, columns); // retornar o DataTable removendo as linhas duplicadas
             dtCont = dtCont.DefaultView.ToTable(true, columns);
+            dtTelefone = dtTelefone.DefaultView.ToTable(true, columnsTel);
             Write(dt, caminhotxt);
             Write(dtCont, caminhotxtCont);
+            Write(dtTelefone, caminhotxtTelefone);
 
             MessageBox.Show("Informações exportadas para " + selectedFolder.ToString(),
                 "Exportação Concluída",MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
         }
 
         private void btnAbrirClick(object sender, EventArgs e)
