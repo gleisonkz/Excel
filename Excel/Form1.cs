@@ -13,12 +13,27 @@ using System.IO;
 
 namespace Excel
 {
+
+    //public static class Extensions
+    //{
+    //    public static void AddRange(this DataColumnCollection dt, string[] columns)
+    //    {
+    //        foreach (var item in columns)
+    //        {
+    //            dt.Add(item);
+    //        }
+    //    }
+    //}
+
     public partial class Form1 : Form
     {
         public void criaDataTableGeral()
         {
+            // Cria um array contendo o caminho das planilhas do caminho selecionado pelo usuário.
             string[] planilhas = Directory.GetFiles(selectedFolder, "*.xlsx");
 
+
+            // Verifica se no caminho selecionado pelo usuário possui algum arquivo.
             if (planilhas.Length == 0)
             {
                 MessageBox.Show("Não existem planilhas no caminho selecionado",
@@ -26,11 +41,17 @@ namespace Excel
                 return;
             }
 
-            string worksheet = "Sheet1";
-            DataTable dtgeral = new DataTable();
-            var columns = new[] { "CNPJ", "EMAIL" };
+            string worksheet = "Sheet1"; // Cria um worksheet com o nome "Sheet1"
+            DataTable dtgeral = new DataTable(); // Instanciação de um novo DataTable
+            var columns = new[] { "CNPJ", "E-MAIL", "TELEFONE", "NuEmpregados" }; // Cria um array de string
+
+            /* Para que seja possível adicionar colunas em um DataTable é necessario que o tipo de objeto a ser adicionado sejá do tipo DataColumn
+            portanto o comando abaixo executa a projeção do array de string para um array de DataColumn e adiciona ao DT. */
+
             dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
 
+                    
+            
 
             foreach (var UmaPlanilha in planilhas)
             {
