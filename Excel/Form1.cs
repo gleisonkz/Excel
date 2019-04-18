@@ -13,23 +13,11 @@ using System.IO;
 
 namespace Excel
 {
-
-    //public static class Extensions
-    //{
-    //    public static void AddRange(this DataColumnCollection dt, string[] columns)
-    //    {
-    //        foreach (var item in columns)
-    //        {
-    //            dt.Add(item);
-    //        }
-    //    }
-    //}
-
     public partial class Form1 : Form
     {
         public void criaDataTableGeral()
         {
-            // Cria um array contendo o caminho das planilhas do caminho selecionado pelo usuário.
+            // Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(selectedFolder, "*.xlsx");
 
 
@@ -41,116 +29,151 @@ namespace Excel
                 return;
             }
 
-            string worksheet = "Sheet1"; // Cria um worksheet com o nome "Sheet1"
-            DataTable dtgeral = new DataTable(); // Instanciação de um novo DataTable
-            var columns = new[] { "CNPJ", "E-MAIL", "TELEFONE", "NuEmpregados" }; // Cria um array de string
+            string guiaPlanilha = "Sheet1"; // Cria uma variavel com o nome da guia da planilha que será lida.
+            DataTable dtgeral = new DataTable(); // Instanciação de um novo DataTable.
+            var columns = new[] { "CNPJ", "VALOR",}; // Cria um array de string.
 
             /* Para que seja possível adicionar colunas em um DataTable é necessario que o tipo de objeto a ser adicionado sejá do tipo DataColumn
-            portanto o comando abaixo executa a projeção do array de string para um array de DataColumn e adiciona ao DT. */
+            portanto o comando abaixo executa (que utiliza uma lambda expression) a projeção do array de 
+            string para um array de DataColumn e adiciona ao DT. */
 
-            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());            
 
-                    
-            
-
-            foreach (var UmaPlanilha in planilhas)
+            foreach (var UmaPlanilha in planilhas) //Inicia um loop por para cada arquivo excel encontrada na pasta informada 
             {
-                //Open the Excel file using ClosedXML.
-                using (XLWorkbook workBook = new XLWorkbook(UmaPlanilha))
+                //Abre o arquivo excel utilizando uma instancia do ClosedXML.
+                using (XLWorkbook workBook = new XLWorkbook(UmaPlanilha)) //Cria uma instancia contendo uma pasta de trabalho
                 {
                     //Read the first Sheet from Excel file.
-                    IXLWorksheet workSheet = workBook.Worksheet(worksheet);
+                    //Faz a leitura da primeira planilha do arquivo
+                    IXLWorksheet workSheet = workBook.Worksheet(guiaPlanilha); //adiciona uma guia de planilha a pasta de trabalho criada
 
-                    bool firstRow = true;
-                    var lst = new List<int>(); //Cria uma lista para que sejam armazenados os índices
+                    bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
 
-                    //Loop para percorrer as linhas da planilha.
+                    //Cria uma lista para que sejam armazenados os índices.
+                    var lstIndicesEmails = new List<int>(); 
+                    var lstIndicesTelefones = new List<int>();
+                    var lstIndicesNuFuncionarios = new List<int>();
+
+                    //Loop para percorrer a primeira linha da planilha e identificar os índices das colunas.
 
                     foreach (IXLRow row in workSheet.Rows())
-                    {
-                        //Usa a primeira linha para adicionar as colunas no DataTable.
-
-                        if (firstRow)
+                    {                        
+                        if (firstRow) //Usa a primeira linha para adicionar as colunas no DataTable.
                         {
-                            //Cria um ojbeto constendo uma regular expression que remove os caracteres especiais
+                            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
 
-                            Regex obj = new System.Text.RegularExpressions.Regex(@"\W");
+                            int indexCells = 0; // Variavel criada para controlar o índice da celula
 
-                            var indexCells = 0;
-
-                            //Percorre por toda a linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
-
-                            foreach (IXLCell cell in row.Cells())
+                            foreach (IXLCell cell in row.Cells()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                             {
-                                var columName = cell.Value.ToString();
-                                var str = obj.Replace(cell.Value.ToString(), "");
-                                if (str.ToUpper().Contains("EMAIL"))
+                                var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
+
+                                if (str.ToUpper().Contains("EMAIL")) 
                                 {
-                                    lst.Add(indexCells);
+                                    lstIndicesEmails.Add(indexCells); //Adiciona a lista de índices
+                                                                     
                                 }
                                 if (str.ToUpper().Contains("TELEFONE"))
                                 {
-                                    lst.Add(indexCells);
+                                    lstIndicesTelefones.Add(indexCells); //Adiciona a lista de índices
                                 }
-
+                                if (str.ToUpper().Contains("FUNCIONÁRIOS"))
+                                {
+                                    lstIndicesNuFuncionarios.Add(indexCells); //Adiciona a lista de índices
+                                }
                                 indexCells++;
+                                
                             }
-
                             firstRow = false;
                         }
-
-                        // Percorre as celulas da linha para identificar o E-MAIL E CNPJ
-                        else
+                        else // Percorre o restante das linhas para recuperar os valores dos índices identificados
                         {
-                            int indexCells = 0;
                             string cnpj = null;
-                            var celulas = row.Cells(false); //Retornar a coleção de celulas usadas e não usadas
+                            string email = null;
+                            string area = null;
+                            string nuEmpregados = null;
+                            string telefone = null;
 
-
-                            foreach (var item in lst)
+                            void RecuperarValor(List<int> lista, string valor)
                             {
-                                string email = string.Empty;
-                                foreach (IXLCell cell in celulas)
+                                int indexCells = 0;
+
+                                //Retornar a coleção de celulas usadas e não usadas da linha, pois por padrão o row.Cells ignora as celulas em branco.
+                                var celulasDaLinha = row.Cells(false);
+
+                                //Loop para percorrer as celulas da linha por cada índice encontrado e recuperar os valores da celula.
+
+                                foreach (var item in lista)
                                 {
-                                    try
+
+                                    foreach (IXLCell cell in celulasDaLinha)
                                     {
-                                        //CNPJ
-                                        if (indexCells == 3)
+                                        try
                                         {
-                                            cnpj = cell.Value.ToString();
-                                        }
+                                            //CNPJ
+                                            if (indexCells == 3)
+                                            {
+                                                cnpj = cell.Value.ToString();
+                                            }
 
-                                        //EMAIL
-                                        if (item == indexCells)
+                                            //EMAIL - Nuempregados - Telefone - parametro passado no construtor
+                                            if (item == indexCells)
+                                            {
+                                                valor = cell.Value.ToString();
+                                                
+                                            }
+
+                                            //AREA
+                                            if (indexCells == 13)
+                                            {
+                                                area = cell.Value.ToString();
+                                            }
+
+                                        }
+                                        catch (Exception ex)
                                         {
-                                            email = cell.Value.ToString();
-                                            break;
+                                            throw ex;
                                         }
-
+                                        indexCells++;
                                     }
-                                    catch (Exception ex)
+
+                                    indexCells = 0;
+
+                                    //Verifica se o CNPJ e Valor são diferentes de vazio ou nullos
+
+                                    if (cnpj != "" && cnpj != null)
                                     {
-                                        throw ex;
-                                    }
-                                    indexCells++;
-                                }
 
-                                indexCells = 0;
+                                        if (valor != "" && valor != null)
+                                        {
 
-                                //Verifica se o EMAIL e CNPJ são diferentes de vazio ou nullos e remove os que contem "CONT"
+                                            if (valor == "0" && area.ToUpper() == "ÁREA EMPRESÁRIO")
+                                            {
+                                                continue;
+                                            }
 
-                                if (cnpj != "" && email != "" && email != null) //adiociona ao DT GERAL
-                                {
-                                    dtgeral.Rows.Add(new object[2] { cnpj, email });
-                                }
+                                            else
+                                            {
+                                                dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DT GERAL
+                                            }
 
-                                dtgeral = dtgeral.DefaultView.ToTable(true, columns);
-                                dataGridView1.DataSource = dtgeral;
+                                            continue;
+
+                                        }
+                                    }                                    
+                                }                                                                
                             }
+
+                            RecuperarValor(lstIndicesEmails, email);
+                            RecuperarValor(lstIndicesNuFuncionarios, nuEmpregados);
+                            RecuperarValor(lstIndicesTelefones, telefone);                                                                                                                                  
                         }
                     }
                 }
             }
+            dtgeral = dtgeral.DefaultView.ToTable(true, columns);
+            dataGridView1.DataSource = dtgeral;
         }
 
         string selectedFolder = null;
@@ -222,7 +245,7 @@ namespace Excel
         }
 
 
-        private void btnExportarClick(object sender, EventArgs e)
+        private void btnExportarClick(object sender, EventArgs e) 
         {
             if (selectedFolder == null)
             {
