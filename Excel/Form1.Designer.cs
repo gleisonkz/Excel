@@ -36,6 +36,7 @@
             this.btn_exportar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label_versao = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,15 +45,15 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 14);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(425, 426);
+            this.dataGridView1.Size = new System.Drawing.Size(425, 410);
             this.dataGridView1.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(469, 268);
+            this.label1.Location = new System.Drawing.Point(471, 258);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(261, 13);
             this.label1.TabIndex = 3;
@@ -62,7 +63,7 @@
             // 
             this.label_caminhoEscolhido.AutoSize = true;
             this.label_caminhoEscolhido.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label_caminhoEscolhido.Location = new System.Drawing.Point(472, 294);
+            this.label_caminhoEscolhido.Location = new System.Drawing.Point(474, 284);
             this.label_caminhoEscolhido.Name = "label_caminhoEscolhido";
             this.label_caminhoEscolhido.Size = new System.Drawing.Size(33, 15);
             this.label_caminhoEscolhido.TabIndex = 4;
@@ -73,7 +74,7 @@
             this.btn_abrir.BackColor = System.Drawing.Color.Transparent;
             this.btn_abrir.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_abrir.BackgroundImage")));
             this.btn_abrir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_abrir.Location = new System.Drawing.Point(472, 350);
+            this.btn_abrir.Location = new System.Drawing.Point(474, 337);
             this.btn_abrir.Margin = new System.Windows.Forms.Padding(0);
             this.btn_abrir.Name = "btn_abrir";
             this.btn_abrir.Size = new System.Drawing.Size(75, 66);
@@ -87,7 +88,7 @@
             this.btn_exportar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_exportar.BackgroundImage")));
             this.btn_exportar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btn_exportar.Enabled = false;
-            this.btn_exportar.Location = new System.Drawing.Point(697, 350);
+            this.btn_exportar.Location = new System.Drawing.Point(699, 337);
             this.btn_exportar.Margin = new System.Windows.Forms.Padding(0);
             this.btn_exportar.Name = "btn_exportar";
             this.btn_exportar.Size = new System.Drawing.Size(75, 66);
@@ -100,7 +101,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(496, 425);
+            this.label2.Location = new System.Drawing.Point(498, 412);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 5;
@@ -109,11 +110,20 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(714, 425);
+            this.label3.Location = new System.Drawing.Point(716, 412);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "Exportar";
+            // 
+            // label_versao
+            // 
+            this.label_versao.AutoSize = true;
+            this.label_versao.Location = new System.Drawing.Point(12, 430);
+            this.label_versao.Name = "label_versao";
+            this.label_versao.Size = new System.Drawing.Size(140, 13);
+            this.label_versao.TabIndex = 7;
+            this.label_versao.Text = "exibe a versão da aplicação";
             // 
             // Form1
             // 
@@ -121,6 +131,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label_versao);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btn_abrir);
@@ -149,6 +160,7 @@
         private System.Windows.Forms.Label label_caminhoEscolhido;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_versao;
     }
 }
 

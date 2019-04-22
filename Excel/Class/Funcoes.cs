@@ -92,7 +92,7 @@ namespace Excel.Class
                                 {
                                     lstIndicesTelefones.Add(indexCells); //Adiciona a lista de índices
                                 }
-                                if (str.ToUpper().Contains("FUNCIONÁRIOS"))
+                                if (str.ToUpper().Contains("FUNCIONÁRIOS") || str.ToUpper().Contains("EMPREGADOS") || str.ToUpper().Contains("FUNCIONARIOS"))
                                 {
                                     lstIndicesNuFuncionarios.Add(indexCells); //Adiciona a lista de índices
                                 }

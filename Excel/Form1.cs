@@ -9,27 +9,28 @@ namespace Excel
     {
         string selectedFolder = null;
         Funcoes objFuncoes = new Funcoes();
-
+        string versao = "Versão 1.0.13";
         public Form1()
         {
             InitializeComponent();
+            label_versao.Text = versao;
         }
 
         private void btnExportarClick(object sender, EventArgs e)
         {
-            //Cria os endereço e nomes dos arquivos que serão salvos
+            //Cria os endereço e nomes dos arquivos que serão salvos.
             string caminhoTxtEmail = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA.txt");
             string caminhoTxtEmailContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR.txt");
             string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES.txt");
             string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados.txt");
 
-            //Recebe os DataTable de cada tipo e atribui a uma variavel
+            //Recebe os DataTable de cada tipo e atribui a uma variavel.
             var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email);
             var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador);
             var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone);
             var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros);
 
-            //Faz a criação dos arquivos de texto e inserção dos dados
+            //Faz a criação dos arquivos de texto e inserção dos dados.
             objFuncoes.Write(dtEmail, caminhoTxtEmail);
             objFuncoes.Write(dtEmailContador, caminhoTxtEmailContador);
             objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
@@ -42,23 +43,24 @@ namespace Excel
         private void btnAbrirClick(object sender, EventArgs e)
         {
             FolderBrowserDialog Abrir = new FolderBrowserDialog(); //Instanciação da classe para abrir caixa de dialogo.
-            Abrir.RootFolder = Environment.SpecialFolder.Desktop; // Defini o local padrão onde será aberto a caixa de dialogo.
+            Abrir.RootFolder = Environment.SpecialFolder.Desktop; //Defini o local padrão onde será aberto a caixa de dialogo.
             var result = Abrir.ShowDialog();
             if (result != DialogResult.OK) //Verifica se foi selecionado algum caminho pela caixa de dialogo, caso contrario retorna.
             {
                 return;
             }
 
-            selectedFolder = Abrir.SelectedPath; //atribui o caminho selecionado em uma variavel
-            label_caminhoEscolhido.Text = selectedFolder; // Exibe o caminho selecionado na label.
-            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder); //Chama o metodo responsável por preencher o DataTable
+            selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
+            label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
+            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder); //Chama o metodo responsável por preencher o DataTable.
 
             if (dtgeral == null)
             {
                 return;
             }
 
-            btn_exportar.Enabled = true; // habilita o botão de exportar
+            btn_exportar.Enabled = true; //Habilita o botão de exportar.
+            btn_exportar.Focus(); //Move o tabindex para o botão exportar.
             dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
         }
     }
