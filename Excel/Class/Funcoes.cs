@@ -131,7 +131,7 @@ namespace Excel.Class
                                                 cnpj = cell.Value.ToString();
                                             }
 
-                                            //EMAIL - Nuempregados - Telefone - parametro passado no construtor
+                                            //VALOR
                                             if (item == indexCells)
                                             {
                                                 valor = cell.Value.ToString();
@@ -222,8 +222,7 @@ namespace Excel.Class
                 //Abre o arquivo excel utilizando uma instancia do ClosedXML.
                 using (XLWorkbook workBook = new XLWorkbook(UmaPlanilha)) //Cria uma instancia contendo uma pasta de trabalho
                 {
-                    //Read the first Sheet from Excel file.
-                    //Faz a leitura da primeira planilha do arquivo
+                    //Faz a leitura do nome da planilha do arquivo
                     IXLWorksheet workSheet = workBook.Worksheet(guiaPlanilha); //adiciona uma guia de planilha a pasta de trabalho criada
 
                     bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
@@ -315,7 +314,7 @@ namespace Excel.Class
                                                 cnpj = cell.Value.ToString();
                                             }
 
-                                            //TIPO VALOR - Nuempregados - Telefone - parametro passado no construtor
+                                            //VALOR
                                             if (item == indexCells)
                                             {
                                                 dado = cell.Value.ToString();
@@ -422,58 +421,11 @@ namespace Excel.Class
 
         public void Write(DataTable dt, string outputFilePath)
         {
-            //int[] maxLengths = new int[dt.Columns.Count];
-
-            //for (int i = 0; i < dt.Columns.Count; i++)
-            //{
-            //    maxLengths[i] = dt.Columns[i].ColumnName.Length;
-
-            //    foreach (DataRow row in dt.Rows)
-            //    {
-            //        if (!row.IsNull(i))
-            //        {
-            //            int length = row[i].ToString().Length;
-
-            //            if (length > maxLengths[i])
-            //            {
-            //                maxLengths[i] = length;
-            //            }
-            //        }
-            //    }
-            //}
-
             using (StreamWriter sw = new StreamWriter(outputFilePath, false))
             {
-                //for (int i = 0; i < dt.Columns.Count; i++)
-                //{
-                //    sw.Write(dt.Columns[i].ColumnName.PadRight(maxLengths[i] + 2));
-                //}
-
-                //sw.WriteLine();
-
                 foreach (DataRow row in dt.Rows)
                 {
                     sw.WriteLine($"{row[0]}\t{row[1]}");
-
-                    //for (int i = 0; i < dt.Columns.Count; i++)
-                    //{
-                    //    if (!row.IsNull(i))
-                    //    {
-                    //        sw.Write(row[i].ToString());
-                    //        if (i % 2 == 0)
-                    //        {
-                    //            sw.Write('\t');
-                    //        }
-
-                    //    }
-                    //    else
-                    //    {
-                    //        sw.Write(new string(' ', maxLengths[i] + 2));
-                    //    }
-                    //}
-
-                    //sw.WriteLine();
-
                 }
                 sw.Close();
             }

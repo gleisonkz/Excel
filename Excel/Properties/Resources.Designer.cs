@@ -63,9 +63,29 @@ namespace Excel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder_icon {
+        internal static System.Drawing.Bitmap Downloads_Black_Folder_icon {
             get {
-                object obj = ResourceManager.GetObject("folder_icon", resourceCulture);
+                object obj = ResourceManager.GetObject("Downloads_Black_Folder_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Generic_Black_Folder_icon {
+            get {
+                object obj = ResourceManager.GetObject("Generic_Black_Folder_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Group_Black_Folder_icon {
+            get {
+                object obj = ResourceManager.GetObject("Group_Black_Folder_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -87,16 +107,6 @@ namespace Excel.Properties {
             get {
                 object obj = ResourceManager.GetObject("icon1", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap txt_icon {
-            get {
-                object obj = ResourceManager.GetObject("txt_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

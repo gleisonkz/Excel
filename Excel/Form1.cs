@@ -7,13 +7,14 @@ namespace Excel
 {
     public partial class Form1 : Form
     {
-        string selectedFolder = null;
-        Funcoes objFuncoes = new Funcoes();
-        string versao = "Versão 1.0.13";
+        string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
+        string pathblacklist = null; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
+        string versao = "Versão 1.0.13"; // Váriavel global para controle da versão.
         public Form1()
         {
             InitializeComponent();
-            label_versao.Text = versao;
+            label_versao.Text = versao; // atribui a versão na label.
         }
 
         private void btnExportarClick(object sender, EventArgs e)
@@ -62,6 +63,17 @@ namespace Excel
             btn_exportar.Enabled = true; //Habilita o botão de exportar.
             btn_exportar.Focus(); //Move o tabindex para o botão exportar.
             dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var n = new Form_Blacklist();
+            n.ShowDialog();
         }
     }
 }
