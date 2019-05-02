@@ -26,6 +26,16 @@ namespace Excel.Class
             EmailContador = 4
         }
 
+        public Dictionary<EtipoValor, string> dicTipo = new Dictionary<EtipoValor, string>
+        {
+            { EtipoValor.Email, "EMAIL" },
+            { EtipoValor.Telefone, "TELEFONE" },
+            { EtipoValor.EmailContador, "EMAIL" },
+            { EtipoValor.NuFuncionaros, "FUNCIONARIOS" }
+        };
+
+
+
         public DataTable PreencheDataTable(string caminho)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
@@ -263,13 +273,9 @@ namespace Excel.Class
                             {
                                 var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
 
-                                var dic = new Dictionary<EtipoValor, string>();
 
 
 
-
-
-                                //dic.Add(EtipoValor.Email, "EMAIL");
                                 //if (str.ToUpper().Contains(dic[Etipo]))
                                 //{
                                 //    lstIndices.Add(indexCells); //Adiciona a lista de índices
