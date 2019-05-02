@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace Excel.Class
         {
         }
 
+        public HashSet<string> listaBlacklist = new HashSet<string>();
+
         public enum EtipoValor
         {
             Email = 1,
@@ -22,7 +25,7 @@ namespace Excel.Class
             Telefone = 3,
             EmailContador = 4
         }
-               
+
         public DataTable PreencheDataTable(string caminho)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
@@ -167,10 +170,26 @@ namespace Excel.Class
 
                                             else
                                             {
-                                                dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
+
+                                                //foreach (string itemLista in listaBlacklist) // Verifica se o valor que está sendo passado consta na blacklist
+                                                //{
+                                                //    if (itemLista.ToUpper() == valor)
+                                                //    {
+                                                //        break;
+                                                //    }
+
+                                                //    dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
+                                                //}
+
+                                                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+
+                                                if (!existe)
+                                                {
+                                                    dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
+                                                }
+
                                             }
 
-                                            continue;
                                         }
                                     }
                                 }
@@ -243,6 +262,20 @@ namespace Excel.Class
                             foreach (IXLCell cell in row.Cells()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                             {
                                 var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
+
+                                var dic = new Dictionary<EtipoValor, string>();
+
+
+
+
+
+                                //dic.Add(EtipoValor.Email, "EMAIL");
+                                //if (str.ToUpper().Contains(dic[Etipo]))
+                                //{
+                                //    lstIndices.Add(indexCells); //Adiciona a lista de índices
+
+                                //}
+
 
 
                                 switch (Etipo)
@@ -429,7 +462,22 @@ namespace Excel.Class
                 }
                 sw.Close();
             }
-        }        
+        }
+
+        public void PreencheBlacklist()
+        {
+            string pathBlacklist = $"{ System.AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt";
+            var sr = new StreamReader(pathBlacklist, Encoding.Default);
+
+            while (!sr.EndOfStream)
+            {
+                var item = sr.ReadLine();
+
+                listaBlacklist.Add(item);
+            }
+
+            sr.Dispose();
+
+        }
     }
 }
-  

@@ -115,6 +115,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Developer-Black-Folder-icon.png" />
     <None Include="Resources\Group-Black-Folder-icon.png" />
     <None Include="Resources\Generic-Black-Folder-icon.png" />
     <None Include="Resources\Downloads-Black-Folder-icon.png" />

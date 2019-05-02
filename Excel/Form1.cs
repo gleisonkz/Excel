@@ -1,5 +1,6 @@
 ﻿using Excel.Class;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
@@ -7,14 +8,18 @@ namespace Excel
 {
     public partial class Form1 : Form
     {
-        string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
-        string pathblacklist = null; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
+        string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
+        string pathBlacklist = System.AppDomain.CurrentDomain.BaseDirectory.ToString(); // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string versao = "Versão 1.0.13"; // Váriavel global para controle da versão.
+
+        
+
         public Form1()
         {
             InitializeComponent();
             label_versao.Text = versao; // atribui a versão na label.
+            objFuncoes.PreencheBlacklist();
         }
 
         private void btnExportarClick(object sender, EventArgs e)

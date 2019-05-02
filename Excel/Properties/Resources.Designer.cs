@@ -63,6 +63,16 @@ namespace Excel.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Developer_Black_Folder_icon {
+            get {
+                object obj = ResourceManager.GetObject("Developer_Black_Folder_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Downloads_Black_Folder_icon {
             get {
                 object obj = ResourceManager.GetObject("Downloads_Black_Folder_icon", resourceCulture);

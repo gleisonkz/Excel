@@ -57,7 +57,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(471, 258);
+            this.label1.Location = new System.Drawing.Point(471, 263);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(261, 13);
             this.label1.TabIndex = 3;
@@ -78,7 +78,7 @@
             this.btn_abrir.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btn_abrir.BackgroundImage = global::Excel.Properties.Resources.Generic_Black_Folder_icon;
             this.btn_abrir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_abrir.Location = new System.Drawing.Point(569, 338);
+            this.btn_abrir.Location = new System.Drawing.Point(487, 338);
             this.btn_abrir.Margin = new System.Windows.Forms.Padding(0);
             this.btn_abrir.Name = "btn_abrir";
             this.btn_abrir.Size = new System.Drawing.Size(75, 66);
@@ -105,7 +105,7 @@
             // label_btn_abrir
             // 
             this.label_btn_abrir.AutoSize = true;
-            this.label_btn_abrir.Location = new System.Drawing.Point(594, 410);
+            this.label_btn_abrir.Location = new System.Drawing.Point(512, 410);
             this.label_btn_abrir.Name = "label_btn_abrir";
             this.label_btn_abrir.Size = new System.Drawing.Size(28, 13);
             this.label_btn_abrir.TabIndex = 5;
@@ -155,7 +155,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(474, 409);
+            this.label2.Location = new System.Drawing.Point(572, 409);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 11;
@@ -163,10 +163,10 @@
             // 
             // button2
             // 
-            this.button2.BackgroundImage = global::Excel.Properties.Resources.Downloads_Black_Folder_icon;
+            this.button2.BackgroundImage = global::Excel.Properties.Resources.Developer_Black_Folder_icon;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(474, 338);
+            this.button2.Location = new System.Drawing.Point(572, 338);
             this.button2.Margin = new System.Windows.Forms.Padding(0);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 66);

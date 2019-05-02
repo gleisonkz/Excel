@@ -156,6 +156,7 @@
             this.Name = "Form_Blacklist";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Blacklist - Inserir / Editar";
+            this.Load += new System.EventHandler(this.Form_Blacklist_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
