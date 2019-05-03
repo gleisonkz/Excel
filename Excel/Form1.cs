@@ -1,7 +1,8 @@
 ﻿using Excel.Class;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Excel
@@ -10,16 +11,31 @@ namespace Excel
     {
         Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
-        string pathBlacklist = System.AppDomain.CurrentDomain.BaseDirectory.ToString(); // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string versao = "Versão 1.0.13"; // Váriavel global para controle da versão.
 
-        
+        HashSet<string> listaBlacklist = new HashSet<string>();
+
+        public void CarregaArquivoParaLista()
+        {
+            //string pathBlacklist = $"{ System.AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt";
+            var sr = new StreamReader(pathBlacklist, Encoding.Default);
+
+            while (!sr.EndOfStream)
+            {
+                var item = sr.ReadLine();
+                listaBlacklist.Add(item);
+            }
+            sr.Dispose();
+
+        }
+
 
         public Form1()
         {
             InitializeComponent();
             label_versao.Text = versao; // atribui a versão na label.
-            objFuncoes.PreencheBlacklist();
+            
         }
 
         private void btnExportarClick(object sender, EventArgs e)
@@ -31,10 +47,10 @@ namespace Excel
             string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados.txt");
 
             //Recebe os DataTable de cada tipo e atribui a uma variavel.
-            var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email);
-            var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador);
-            var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone);
-            var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros);
+            var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist);
+            var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist);
+            var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist);
+            var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist);
 
             //Faz a criação dos arquivos de texto e inserção dos dados.
             objFuncoes.Write(dtEmail, caminhoTxtEmail);
@@ -58,7 +74,7 @@ namespace Excel
 
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
-            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder); //Chama o metodo responsável por preencher o DataTable.
+            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder,listaBlacklist); //Chama o metodo responsável por preencher o DataTable.
 
             if (dtgeral == null)
             {
@@ -72,12 +88,12 @@ namespace Excel
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           
+            CarregaArquivoParaLista();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnBlacklistClick(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist();
+            var n = new Form_Blacklist(listaBlacklist);
             n.ShowDialog();
         }
     }

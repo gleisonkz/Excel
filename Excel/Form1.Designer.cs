@@ -37,7 +37,7 @@
             this.label_btn_abrir = new System.Windows.Forms.Label();
             this.label_btn_exportar = new System.Windows.Forms.Label();
             this.label_versao = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_blacklist = new System.Windows.Forms.Button();
             this.label_btn_blacklist = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
@@ -129,19 +129,19 @@
             this.label_versao.TabIndex = 7;
             this.label_versao.Text = "exibe a versão da aplicação";
             // 
-            // button1
+            // btn_blacklist
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(657, 338);
-            this.button1.Margin = new System.Windows.Forms.Padding(0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 66);
-            this.button1.TabIndex = 1;
-            this.button1.TabStop = false;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btn_blacklist.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btn_blacklist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
+            this.btn_blacklist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_blacklist.Location = new System.Drawing.Point(657, 338);
+            this.btn_blacklist.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_blacklist.Name = "btn_blacklist";
+            this.btn_blacklist.Size = new System.Drawing.Size(75, 66);
+            this.btn_blacklist.TabIndex = 1;
+            this.btn_blacklist.TabStop = false;
+            this.btn_blacklist.UseVisualStyleBackColor = false;
+            this.btn_blacklist.Click += new System.EventHandler(this.btnBlacklistClick);
             // 
             // label_btn_blacklist
             // 
@@ -184,7 +184,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label_btn_blacklist);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_blacklist);
             this.Controls.Add(this.label_versao);
             this.Controls.Add(this.label_btn_exportar);
             this.Controls.Add(this.label_btn_abrir);
@@ -216,7 +216,7 @@
         private System.Windows.Forms.Label label_btn_abrir;
         private System.Windows.Forms.Label label_btn_exportar;
         private System.Windows.Forms.Label label_versao;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_blacklist;
         private System.Windows.Forms.Label label_btn_blacklist;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;

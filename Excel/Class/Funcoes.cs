@@ -16,8 +16,6 @@ namespace Excel.Class
         {
         }
 
-        public HashSet<string> listaBlacklist = new HashSet<string>();
-
         public enum EtipoValor
         {
             Email = 1,
@@ -34,9 +32,7 @@ namespace Excel.Class
             { EtipoValor.NuFuncionaros, "FUNCIONARIOS" }
         };
 
-
-
-        public DataTable PreencheDataTable(string caminho)
+        public DataTable PreencheDataTable(string caminho, HashSet<string> listaBlacklist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -216,7 +212,7 @@ namespace Excel.Class
             return dtgeral;
         }
 
-        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo)
+        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo, HashSet<string> listaBlacklist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -274,52 +270,43 @@ namespace Excel.Class
                                 var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
 
 
-
-
-                                //if (str.ToUpper().Contains(dic[Etipo]))
-                                //{
-                                //    lstIndices.Add(indexCells); //Adiciona a lista de índices
-
-                                //}
-
-
-
-                                switch (Etipo)
+                                if (str.ToUpper().Contains(dicTipo[Etipo]))
                                 {
-                                    case EtipoValor.Email:
-
-                                        if (str.ToUpper().Contains("EMAIL"))
-                                        {
-                                            lstIndices.Add(indexCells); //Adiciona a lista de índices
-
-                                        }
-                                        break;
-                                    case EtipoValor.NuFuncionaros:
-
-                                        if (str.ToUpper().Contains("FUNCIONÁRIOS"))
-                                        {
-                                            lstIndices.Add(indexCells); //Adiciona a lista de índices
-                                        }
-                                        break;
-                                    case EtipoValor.Telefone:
-
-                                        if (str.ToUpper().Contains("TELEFONE"))
-                                        {
-                                            lstIndices.Add(indexCells); //Adiciona a lista de índices
-                                        }
-                                        break;
-                                    case EtipoValor.EmailContador:
-
-                                        if (str.ToUpper().Contains("EMAIL"))
-                                        {
-                                            lstIndices.Add(indexCells); //Adiciona a lista de índices
-
-                                        }
-                                        break;
-                                    default:
-                                        MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
-                                        break;
+                                    lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
+
+                                #region Switch que foi substituido acrescentando os dados em um dictionary
+                                //switch (Etipo)
+                                //{
+                                //    case EtipoValor.Email:
+                                //        if (str.ToUpper().Contains("EMAIL"))
+                                //        {
+                                //            lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                //        }
+                                //        break;
+                                //    case EtipoValor.NuFuncionaros:
+                                //        if (str.ToUpper().Contains("FUNCIONÁRIOS"))
+                                //        {
+                                //            lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                //        }
+                                //        break;
+                                //    case EtipoValor.Telefone:
+                                //        if (str.ToUpper().Contains("TELEFONE"))
+                                //        {
+                                //            lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                //        }
+                                //        break;
+                                //    case EtipoValor.EmailContador:
+                                //        if (str.ToUpper().Contains("EMAIL"))
+                                //        {
+                                //            lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                //        }
+                                //        break;
+                                //    default:
+                                //        MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
+                                //        break;
+                                //}
+                                #endregion
 
                                 indexCells++;
                             }
@@ -386,9 +373,14 @@ namespace Excel.Class
 
                                                         if (contemCONT == false) //adiociona ao DataTable
                                                         {
-                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado });
-                                                        }
 
+                                                            var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
+
+                                                            if (!existe)
+                                                            {
+                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 break;
@@ -433,7 +425,13 @@ namespace Excel.Class
 
                                                         if (contemCONT) //adiociona ao DataTable
                                                         {
-                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado });
+
+                                                            var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
+
+                                                            if (!existe)
+                                                            {
+                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                            }
                                                         }
 
                                                     }
@@ -470,20 +468,5 @@ namespace Excel.Class
             }
         }
 
-        public void PreencheBlacklist()
-        {
-            string pathBlacklist = $"{ System.AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt";
-            var sr = new StreamReader(pathBlacklist, Encoding.Default);
-
-            while (!sr.EndOfStream)
-            {
-                var item = sr.ReadLine();
-
-                listaBlacklist.Add(item);
-            }
-
-            sr.Dispose();
-
-        }
     }
 }
