@@ -43,6 +43,7 @@
             // 
             // btn_editar
             // 
+            this.btn_editar.Enabled = false;
             this.btn_editar.Location = new System.Drawing.Point(160, 396);
             this.btn_editar.Name = "btn_editar";
             this.btn_editar.Size = new System.Drawing.Size(99, 46);
@@ -54,6 +55,7 @@
             // 
             // btn_apagar
             // 
+            this.btn_apagar.Enabled = false;
             this.btn_apagar.Location = new System.Drawing.Point(369, 396);
             this.btn_apagar.Name = "btn_apagar";
             this.btn_apagar.Size = new System.Drawing.Size(98, 46);
@@ -61,6 +63,7 @@
             this.btn_apagar.TabStop = false;
             this.btn_apagar.Text = "Apagar";
             this.btn_apagar.UseVisualStyleBackColor = true;
+            this.btn_apagar.Click += new System.EventHandler(this.btn_apagar_Click);
             // 
             // label_numero_registros
             // 
@@ -89,13 +92,14 @@
             this.ltb_emails.Name = "ltb_emails";
             this.ltb_emails.Size = new System.Drawing.Size(554, 200);
             this.ltb_emails.TabIndex = 14;
+            this.ltb_emails.SelectedIndexChanged += new System.EventHandler(this.ltb_emails_SelectedIndexChanged);
             // 
             // btn_gravar
             // 
             this.btn_gravar.Enabled = false;
-            this.btn_gravar.Location = new System.Drawing.Point(205, 56);
+            this.btn_gravar.Location = new System.Drawing.Point(198, 54);
             this.btn_gravar.Name = "btn_gravar";
-            this.btn_gravar.Size = new System.Drawing.Size(112, 38);
+            this.btn_gravar.Size = new System.Drawing.Size(140, 38);
             this.btn_gravar.TabIndex = 13;
             this.btn_gravar.TabStop = false;
             this.btn_gravar.Text = "Gravar";
@@ -105,17 +109,17 @@
             // text_valor
             // 
             this.text_valor.Enabled = false;
-            this.text_valor.Location = new System.Drawing.Point(87, 30);
+            this.text_valor.Location = new System.Drawing.Point(58, 28);
             this.text_valor.MaxLength = 50;
             this.text_valor.Name = "text_valor";
-            this.text_valor.Size = new System.Drawing.Size(274, 20);
+            this.text_valor.Size = new System.Drawing.Size(280, 20);
             this.text_valor.TabIndex = 11;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(17, 28);
+            this.label1.Location = new System.Drawing.Point(14, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 23);
+            this.label1.Size = new System.Drawing.Size(38, 23);
             this.label1.TabIndex = 21;
             this.label1.Text = "Email:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -145,9 +149,9 @@
             // btn_cancelar
             // 
             this.btn_cancelar.Enabled = false;
-            this.btn_cancelar.Location = new System.Drawing.Point(87, 56);
+            this.btn_cancelar.Location = new System.Drawing.Point(58, 54);
             this.btn_cancelar.Name = "btn_cancelar";
-            this.btn_cancelar.Size = new System.Drawing.Size(112, 38);
+            this.btn_cancelar.Size = new System.Drawing.Size(140, 38);
             this.btn_cancelar.TabIndex = 23;
             this.btn_cancelar.TabStop = false;
             this.btn_cancelar.Text = "Cancelar";
