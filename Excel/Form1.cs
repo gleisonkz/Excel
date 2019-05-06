@@ -12,9 +12,9 @@ namespace Excel
         Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = "Versão 1.0.13"; // Váriavel global para controle da versão.
+        string versao = "Versão 1.0.14"; // Váriavel global para controle da versão.
 
-        HashSet<string> listaBlacklist = new HashSet<string>();
+        List<string> listaBlacklist = new List<string>();
 
         public void CarregaArquivoParaLista()
         {
@@ -29,6 +29,17 @@ namespace Excel
 
         }
 
+        public void GravarListaNoArquivo()
+        {
+            var sw = new StreamWriter(pathBlacklist, false, Encoding.Default);
+
+            foreach (var item in listaBlacklist)
+            {
+                sw.WriteLine(item);
+            }
+            sw.Dispose();
+
+        }
 
         public Form1()
         {
@@ -92,8 +103,10 @@ namespace Excel
 
         private void btnBlacklistClick(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist(listaBlacklist);
+            var n = new Form_Blacklist(listaBlacklist,objFuncoes);
             n.ShowDialog();
+            GravarListaNoArquivo();
+
         }
     }
 }

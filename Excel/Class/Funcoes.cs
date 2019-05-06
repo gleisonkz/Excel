@@ -33,7 +33,7 @@ namespace Excel.Class
             { EtipoValor.NuFuncionaros, "FUNCIONARIOS" }
         };
 
-        public DataTable PreencheDataTable(string caminho, HashSet<string> listaBlacklist)
+        public DataTable PreencheDataTable(string caminho, List<string> listaBlacklist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -213,7 +213,7 @@ namespace Excel.Class
             return dtgeral;
         }
 
-        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo, HashSet<string> listaBlacklist)
+        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo, List<string> listaBlacklist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
