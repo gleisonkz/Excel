@@ -268,10 +268,9 @@ namespace Excel.Class
 
                             foreach (IXLCell cell in row.Cells()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                             {
-                                var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
-                                var strSemAcento = RemoverAcentuacao(str);
+                                var str = ojbRegex.Replace(cell.Value.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
 
-                                if (strSemAcento.ToUpper().Contains(dicTipo[Etipo]))
+                                if (str.ToUpper().Contains(dicTipo[Etipo]))
                                 {
                                     lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
@@ -469,16 +468,20 @@ namespace Excel.Class
             }
         }
 
-        public static string RemoverAcentuacao(string text)
-        {
-            return new string(text
-                .Normalize(NormalizationForm.FormD)
-                .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
-                .ToArray());
-        }
+        //public static string RemoverAcentuacao( string text)
+        //{
+        //    return new string(text
+        //        .Normalize(NormalizationForm.FormD)
+        //        .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+        //        .ToArray());
+        //}
 
-
+        
         
 
     }
+
+
+
+
 }

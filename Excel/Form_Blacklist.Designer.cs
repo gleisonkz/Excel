@@ -63,7 +63,7 @@
             this.btn_apagar.TabStop = false;
             this.btn_apagar.Text = "Apagar";
             this.btn_apagar.UseVisualStyleBackColor = true;
-            this.btn_apagar.Click += new System.EventHandler(this.btn_apagar_Click);
+            this.btn_apagar.Click += new System.EventHandler(this.Btn_apagar_Click);
             // 
             // label_numero_registros
             // 

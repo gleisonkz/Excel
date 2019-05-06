@@ -30,7 +30,7 @@ namespace Excel
             AtualizarListBox();
         } 
 
-        private void btn_gravar_Click(object sender, EventArgs e)
+        private void Btn_gravar_Click(object sender, EventArgs e)
         {
             var valor = text_valor.Text.ToUpper();
 
@@ -61,7 +61,7 @@ namespace Excel
             
         }
 
-        private void btn_editar_Click(object sender, EventArgs e)
+        private void Btn_editar_Click(object sender, EventArgs e)
         {
             Editando = true;
             text_valor.Text = ltb_emails.SelectedItem.ToString();
@@ -71,12 +71,12 @@ namespace Excel
             text_valor.Focus();
         }
 
-        private void btn_fechar_Click(object sender, EventArgs e)
+        private void Btn_fechar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btn_novo_Click(object sender, EventArgs e)
+        private void Btn_novo_Click(object sender, EventArgs e)
         {
             btn_gravar.Enabled = true;
             btn_cancelar.Enabled = true;
@@ -88,7 +88,7 @@ namespace Excel
 
         }
 
-        private void btn_cancelar_Click(object sender, EventArgs e)
+        private void Btn_cancelar_Click(object sender, EventArgs e)
         {
             btn_gravar.Enabled = false;
             btn_cancelar.Enabled = false;
@@ -120,7 +120,7 @@ namespace Excel
 
         }
 
-        private void btn_apagar_Click(object sender, EventArgs e)
+        private void Btn_apagar_Click(object sender, EventArgs e)
         {
             try
             {

@@ -1,6 +1,9 @@
 ﻿using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
-namespace Excel.Class
+namespace Excel
 {
     public static class Extensions
     {
@@ -11,5 +14,16 @@ namespace Excel.Class
                 dt.Add(item);
             }
         }
+
+        public static string RemoverAcentuacao(this string text)
+        {
+            return new string(text
+                .Normalize(NormalizationForm.FormD)
+                .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                .ToArray());
+        }
+
     }
+
+
 }
