@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Excel.Class
 {
-    class Funcoes
+    public class Funcoes
     {
         public Funcoes()
         {
@@ -70,7 +71,7 @@ namespace Excel.Class
                     //Read the first Sheet from Excel file.
                     //Faz a leitura da primeira planilha do arquivo
                     IXLWorksheet workSheet = workBook.Worksheet(guiaPlanilha); //adiciona uma guia de planilha a pasta de trabalho criada
-
+                    
                     bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
 
                     // Cria uma lista para que sejam armazenados os índices.
@@ -78,7 +79,7 @@ namespace Excel.Class
                     var lstIndicesTelefones = new List<int>();
                     var lstIndicesNuFuncionarios = new List<int>();
 
-                    // Loop para percorrer a primeira linha da planilha e identificar os índices das colunas.
+                    // Loop para percorrer a primeira linha da planilha e lidentificar os índices das colunas.
 
                     foreach (IXLRow row in workSheet.Rows())
                     {
@@ -268,9 +269,9 @@ namespace Excel.Class
                             foreach (IXLCell cell in row.Cells()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                             {
                                 var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
+                                var strSemAcento = RemoverAcentuacao(str);
 
-
-                                if (str.ToUpper().Contains(dicTipo[Etipo]))
+                                if (strSemAcento.ToUpper().Contains(dicTipo[Etipo]))
                                 {
                                     lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
@@ -467,6 +468,17 @@ namespace Excel.Class
                 sw.Close();
             }
         }
+
+        public static string RemoverAcentuacao(string text)
+        {
+            return new string(text
+                .Normalize(NormalizationForm.FormD)
+                .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                .ToArray());
+        }
+
+
+        
 
     }
 }

@@ -26,33 +26,26 @@ namespace Excel
 
         private void Form_Blacklist_Load(object sender, EventArgs e)
         {
-            foreach (var item in listaBlacklist)
-            {
-                ltb_emails.Items.Add(item);
-            }
-            
-            label_numero_registros.Text = $"Qtd registros: {listaBlacklist.Count.ToString()} ";
-
+            AtualizarListBox();
         } 
 
-        private void btn_gravar_Click(object sender, EventArgs e)
+        private void Btn_gravar_Click(object sender, EventArgs e)
         {
             var valor = text_valor.Text;
             listaBlacklist.Add(valor);
-            
-            
+            AtualizarListBox();
         }
 
-        private void btn_editar_Click(object sender, EventArgs e)
+        private void Btn_editar_Click(object sender, EventArgs e)
         {
         }
 
-        private void btn_fechar_Click(object sender, EventArgs e)
+        private void Btn_fechar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btn_novo_Click(object sender, EventArgs e)
+        private void Btn_novo_Click(object sender, EventArgs e)
         {
             btn_gravar.Enabled = true;
             btn_cancelar.Enabled = true;
@@ -63,7 +56,7 @@ namespace Excel
 
         }
 
-        private void btn_cancelar_Click(object sender, EventArgs e)
+        private void Btn_cancelar_Click(object sender, EventArgs e)
         {
             btn_gravar.Enabled = false;
             btn_cancelar.Enabled = false;
@@ -71,6 +64,16 @@ namespace Excel
             ltb_emails.Enabled = true;
             ltb_emails.Focus();
             
+        }
+
+        private void AtualizarListBox()
+        {
+            foreach (var item in listaBlacklist)
+            {
+                ltb_emails.Items.Add(item);
+            }
+
+            label_numero_registros.Text = $"Qtd registros: {listaBlacklist.Count.ToString()} ";
         }
     }
 }

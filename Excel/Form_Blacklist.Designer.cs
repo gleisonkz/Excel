@@ -50,7 +50,7 @@
             this.btn_editar.TabStop = false;
             this.btn_editar.Text = "Editar";
             this.btn_editar.UseVisualStyleBackColor = true;
-            this.btn_editar.Click += new System.EventHandler(this.btn_editar_Click);
+            this.btn_editar.Click += new System.EventHandler(this.Btn_editar_Click);
             // 
             // btn_apagar
             // 
@@ -100,7 +100,7 @@
             this.btn_gravar.TabStop = false;
             this.btn_gravar.Text = "Gravar";
             this.btn_gravar.UseVisualStyleBackColor = true;
-            this.btn_gravar.Click += new System.EventHandler(this.btn_gravar_Click);
+            this.btn_gravar.Click += new System.EventHandler(this.Btn_gravar_Click);
             // 
             // text_valor
             // 
@@ -129,7 +129,7 @@
             this.btn_fechar.TabStop = false;
             this.btn_fechar.Text = "Fechar";
             this.btn_fechar.UseVisualStyleBackColor = true;
-            this.btn_fechar.Click += new System.EventHandler(this.btn_fechar_Click);
+            this.btn_fechar.Click += new System.EventHandler(this.Btn_fechar_Click);
             // 
             // btn_novo
             // 
@@ -140,7 +140,7 @@
             this.btn_novo.TabStop = false;
             this.btn_novo.Text = "Novo";
             this.btn_novo.UseVisualStyleBackColor = true;
-            this.btn_novo.Click += new System.EventHandler(this.btn_novo_Click);
+            this.btn_novo.Click += new System.EventHandler(this.Btn_novo_Click);
             // 
             // btn_cancelar
             // 
@@ -152,7 +152,7 @@
             this.btn_cancelar.TabStop = false;
             this.btn_cancelar.Text = "Cancelar";
             this.btn_cancelar.UseVisualStyleBackColor = true;
-            this.btn_cancelar.Click += new System.EventHandler(this.btn_cancelar_Click);
+            this.btn_cancelar.Click += new System.EventHandler(this.Btn_cancelar_Click);
             // 
             // Form_Blacklist
             // 

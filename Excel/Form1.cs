@@ -18,7 +18,6 @@ namespace Excel
 
         public void CarregaArquivoParaLista()
         {
-            //string pathBlacklist = $"{ System.AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt";
             var sr = new StreamReader(pathBlacklist, Encoding.Default);
 
             while (!sr.EndOfStream)
