@@ -44,7 +44,7 @@
             // btn_editar
             // 
             this.btn_editar.Enabled = false;
-            this.btn_editar.Location = new System.Drawing.Point(160, 396);
+            this.btn_editar.Location = new System.Drawing.Point(159, 396);
             this.btn_editar.Name = "btn_editar";
             this.btn_editar.Size = new System.Drawing.Size(99, 46);
             this.btn_editar.TabIndex = 15;
