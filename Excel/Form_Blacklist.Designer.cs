@@ -92,7 +92,7 @@
             this.ltb_emails.Name = "ltb_emails";
             this.ltb_emails.Size = new System.Drawing.Size(554, 200);
             this.ltb_emails.TabIndex = 14;
-            this.ltb_emails.SelectedIndexChanged += new System.EventHandler(this.ltb_emails_SelectedIndexChanged);
+            this.ltb_emails.SelectedIndexChanged += new System.EventHandler(this.Ltb_emails_SelectedIndexChanged);
             // 
             // btn_gravar
             // 
@@ -104,7 +104,7 @@
             this.btn_gravar.TabStop = false;
             this.btn_gravar.Text = "Gravar";
             this.btn_gravar.UseVisualStyleBackColor = true;
-            this.btn_gravar.Click += new System.EventHandler(this.Btn_gravar_Click);
+            this.btn_gravar.Click += new System.EventHandler(this.BtnGravarClick);
             // 
             // text_valor
             // 

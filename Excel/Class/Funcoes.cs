@@ -167,6 +167,8 @@ namespace Excel.Class
                                     if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
                                     {
 
+                                        
+
                                         if (valor != "" && valor != null) //Verifica se o campo VALOR é vazio ou nulo
                                         {
 
@@ -189,11 +191,13 @@ namespace Excel.Class
                                                 //}
 
                                                 var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
-
+                                                                                               
                                                 if (!existe)
                                                 {
                                                     dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
                                                 }
+
+                                               
 
                                             }
 

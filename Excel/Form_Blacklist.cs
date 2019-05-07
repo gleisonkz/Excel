@@ -21,7 +21,6 @@ namespace Excel
         {
             InitializeComponent();
             this.listaBlacklist = listaBlacklist;
-            
             this.objFuncoes = objFuncoes;
         }
 
@@ -30,7 +29,7 @@ namespace Excel
             AtualizarListBox();
         } 
 
-        private void Btn_gravar_Click(object sender, EventArgs e)
+        private void BtnGravarClick(object sender, EventArgs e)
         {
             var valor = text_valor.Text.ToUpper();
 
@@ -96,9 +95,7 @@ namespace Excel
             text_valor.Text = string.Empty;
             ltb_emails.Enabled = true;
             ltb_emails.Focus();
-            Editando = false;
-
-            
+            Editando = false;            
         }
 
         private void AtualizarListBox()
@@ -134,7 +131,7 @@ namespace Excel
             }
         }
 
-        private void ltb_emails_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ltb_emails_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ltb_emails.SelectedIndex != -1)
             {
