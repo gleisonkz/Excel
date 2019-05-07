@@ -25,12 +25,12 @@ namespace Excel.Class
             EmailContador = 4
         }
 
-        public Dictionary<EtipoValor, string> dicTipo = new Dictionary<EtipoValor, string>
+        public Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
         {
-            { EtipoValor.Email, "EMAIL" },
-            { EtipoValor.Telefone, "TELEFONE" },
-            { EtipoValor.EmailContador, "EMAIL" },
-            { EtipoValor.NuFuncionaros, "FUNCIONARIOS" }
+            { EtipoValor.Email, new [] { "EMAIL" } },
+            { EtipoValor.Telefone, new [] { "TELEFONE" } },
+            { EtipoValor.EmailContador, new [] { "EMAIL" } },
+            { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } }
         };
 
         public DataTable PreencheDataTable(string caminho, List<string> listaBlacklist)
@@ -91,7 +91,7 @@ namespace Excel.Class
 
                             foreach (IXLCell cell in row.Cells()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                             {
-                                var str = ojbRegex.Replace(cell.Value.ToString(), ""); //Recupera o valor da celula removendo os caracteres especiais
+                                var str = ojbRegex.Replace(cell.Value.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuação
 
                                 if (str.ToUpper().Contains("EMAIL"))
                                 {
@@ -102,7 +102,7 @@ namespace Excel.Class
                                 {
                                     lstIndicesTelefones.Add(indexCells); //Adiciona a lista de índices
                                 }
-                                if (str.ToUpper().Contains("FUNCIONÁRIOS") || str.ToUpper().Contains("EMPREGADOS") || str.ToUpper().Contains("FUNCIONARIOS"))
+                                if (str.ToUpper().Contains("EMPREGADOS") || str.ToUpper().Contains("FUNCIONARIOS"))
                                 {
                                     lstIndicesNuFuncionarios.Add(indexCells); //Adiciona a lista de índices
                                 }
@@ -246,6 +246,7 @@ namespace Excel.Class
             string para um array de DataColumn e adiciona ao DT. */
 
             dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W+"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
 
             foreach (var UmaPlanilha in planilhas) //Inicia um loop por para cada arquivo excel encontrada na pasta informada 
             {
@@ -266,7 +267,7 @@ namespace Excel.Class
                     {
                         if (firstRow) //Usa a primeira linha para adicionar as colunas no DataTable.
                         {
-                            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
+                            
 
                             int indexCells = 0; // Variavel criada para controlar o índice da celula
 
@@ -274,10 +275,19 @@ namespace Excel.Class
                             {
                                 var str = ojbRegex.Replace(cell.Value.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
 
-                                if (str.ToUpper().Contains(dicTipo[Etipo]))
+                                //bool tem = dicTipo[Etipo].Any(c => c == str.ToUpper());
+
+                                if (dicTipo[Etipo].Any(c => c.Contains(str.ToUpper()) || str.ToUpper().Contains(c)))
                                 {
                                     lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
+
+
+                                //if (str.ToUpper().Contains(dicTipo[Etipo]))
+                                //{
+                                //    lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                //}
+
 
                                 #region Switch que foi substituido acrescentando os dados em um dictionary
                                 //switch (Etipo)
@@ -472,16 +482,6 @@ namespace Excel.Class
             }
         }
 
-        //public static string RemoverAcentuacao( string text)
-        //{
-        //    return new string(text
-        //        .Normalize(NormalizationForm.FormD)
-        //        .Where(ch => char.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
-        //        .ToArray());
-        //}
-
-        
-        
 
     }
 

@@ -12,14 +12,14 @@ namespace Excel
 
         public bool Editando { get; set; }
 
-        public Form_Blacklist()
-        {
-            InitializeComponent();
-        }   
+        //public Form_Blacklist()
+        //{
+        //    //InitializeComponent();
+        //}   
 
         public Form_Blacklist(List<string> listaBlacklist, Funcoes objFuncoes)
         {
-            InitializeComponent();
+           // InitializeComponent();
             this.listaBlacklist = listaBlacklist;
             this.objFuncoes = objFuncoes;
         }
