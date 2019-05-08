@@ -71,7 +71,7 @@ namespace Excel.Class
                     //Read the first Sheet from Excel file.
                     //Faz a leitura da primeira planilha do arquivo
                     IXLWorksheet workSheet = workBook.Worksheet(guiaPlanilha); //adiciona uma guia de planilha a pasta de trabalho criada
-                    
+
                     bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
 
                     // Cria uma lista para que sejam armazenados os índices.
@@ -167,7 +167,7 @@ namespace Excel.Class
                                     if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
                                     {
 
-                                        
+
 
                                         if (valor != "" && valor != null) //Verifica se o campo VALOR é vazio ou nulo
                                         {
@@ -191,13 +191,13 @@ namespace Excel.Class
                                                 //}
 
                                                 var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
-                                                                                               
+
                                                 if (!existe)
                                                 {
                                                     dtgeral.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
                                                 }
 
-                                               
+
 
                                             }
 
@@ -267,7 +267,7 @@ namespace Excel.Class
                     {
                         if (firstRow) //Usa a primeira linha para adicionar as colunas no DataTable.
                         {
-                            
+
 
                             int indexCells = 0; // Variavel criada para controlar o índice da celula
 
@@ -373,87 +373,69 @@ namespace Excel.Class
                                         }
                                         indexCells++;
 
+                                        // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
+                                        var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
-                                        switch (Etipo)
+                                        
+
+                                        if (dadosValidos)
                                         {
-                                            case EtipoValor.Email:
+                                            bool contemCONT = dado.Contains("CONT"); //Discarta os registros que contenham "CONT"
 
+                                            switch (Etipo)
+                                            {
+                                                case EtipoValor.Email:
 
-                                                if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
-                                                {
-                                                    if (dado != "" && dado != null) //Verifica se o campo VALOR é vazio ou nulo
+                                                    if (contemCONT == false) //Verificar se o e-mail não contém "CONT"
                                                     {
-                                                        bool contemCONT = dado.Contains("CONT"); //Discarta os registros que contenham "CONT"
+                                                        //Verificar se o e-mail consta na blacklist
+                                                        var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
 
-                                                        if (contemCONT == false) //adiociona ao DataTable
+                                                        if (!existe)
                                                         {
-
-                                                            var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
-
-                                                            if (!existe)
-                                                            {
-                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                            }
+                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
                                                         }
                                                     }
-                                                }
-                                                break;
+                                                    break;
 
-                                            case EtipoValor.NuFuncionaros:
+                                                case EtipoValor.NuFuncionaros:
 
-                                                if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
-                                                {
-                                                    if (dado != "" && dado != null) //Verifica se o campo VALOR é vazio ou nulo
+                                                    if (area == "ÁREA EMPRESÁRIO" && dado == "0")
                                                     {
-                                                        if (area == "ÁREA EMPRESÁRIO" && dado == "0")
-                                                        {
-                                                            continue;
-                                                        }
-                                                        else
-                                                        {
-                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado });
-                                                        }
-
+                                                        continue;
                                                     }
-                                                }
-                                                break;
-
-                                            case EtipoValor.Telefone:
-
-                                                if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
-                                                {
-                                                    if (dado != "" && dado != null) //Verifica se o campo VALOR é vazio ou nulo
+                                                    else
                                                     {
                                                         dtgeral.Rows.Add(new object[2] { cnpj, dado });
                                                     }
-                                                }
-                                                break;
 
-                                            case EtipoValor.EmailContador:
+                                                    break;
 
-                                                if (cnpj != "" && cnpj != null) //Verifica se o CNPJ é vazio ou nulo
-                                                {
-                                                    if (dado != "" && dado != null) //Verifica se o campo VALOR é vazio ou nulo
+                                                case EtipoValor.Telefone:
+
+                                                    dtgeral.Rows.Add(new object[2] { cnpj, dado });
+
+                                                    break;
+
+                                                case EtipoValor.EmailContador:
+
+                                                    if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
                                                     {
-                                                        bool contemCONT = dado.Contains("CONT"); //Discarta os registros que contenham "CONT"
+                                                        //Verificar se o e-mail consta na blacklist
+                                                        var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
 
-                                                        if (contemCONT) //adiociona ao DataTable
+                                                        if (!existe)
                                                         {
-
-                                                            var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
-
-                                                            if (!existe)
-                                                            {
-                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                            }
+                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
                                                         }
-
                                                     }
-                                                }
-                                                break;
-                                            default:
-                                                MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
-                                                break;
+
+                                                    break;
+                                                default:
+                                                    MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
+                                                    break;
+                                            }
+                                            break;
                                         }
                                     }
 
