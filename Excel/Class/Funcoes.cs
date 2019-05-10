@@ -275,8 +275,6 @@ namespace Excel.Class
                             {
                                 var str = ojbRegex.Replace(cell.Value.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
 
-                                //bool tem = dicTipo[Etipo].Any(c => c == str.ToUpper());
-
                                 if (dicTipo[Etipo].Any(c => c.Contains(str.ToUpper()) || str.ToUpper().Contains(c)))
                                 {
                                     lstIndices.Add(indexCells); //Adiciona a lista de índices
@@ -463,11 +461,5 @@ namespace Excel.Class
                 sw.Close();
             }
         }
-
-
     }
-
-
-
-
 }
