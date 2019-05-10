@@ -23,6 +23,12 @@ namespace Excel
                 .ToArray());
         }
 
+        public static bool IsNullOrEmpty(this string text)
+        {
+            var t = string.IsNullOrEmpty(text);
+            return t;
+        }
+
     }
 
 

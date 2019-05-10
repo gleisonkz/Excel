@@ -157,7 +157,7 @@ namespace Excel.Class
                                         }
                                         catch (Exception ex)
                                         {
-                                            throw ex;
+                                            MessageBox.Show(ex.Message);
                                         }
                                         indexCells++;
                                     }
@@ -373,8 +373,6 @@ namespace Excel.Class
 
                                         // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                         var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
-
-                                        
 
                                         if (dadosValidos)
                                         {

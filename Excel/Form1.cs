@@ -18,21 +18,34 @@ namespace Excel
 
         public void CarregaArquivoParaLista()
         {
-            var sr = new StreamReader(pathBlacklist, Encoding.Default);
-
-            while (!sr.EndOfStream)
+            try
             {
-                var item = sr.ReadLine();
-                listaBlacklist.Add(item);
+                if (File.Exists(pathBlacklist) == false)
+                {
+                    GravarListaNoArquivo();
+                }
+
+
+                var sr = new StreamReader(pathBlacklist, Encoding.Default);
+
+                while (!sr.EndOfStream)
+                {
+                    var item = sr.ReadLine();
+                    listaBlacklist.Add(item);
+                }
+                sr.Dispose();
             }
-            sr.Dispose();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
         }
 
         public void GravarListaNoArquivo()
         {
             var sw = new StreamWriter(pathBlacklist, false, Encoding.Default);
-
+            
             foreach (var item in listaBlacklist)
             {
                 sw.WriteLine(item);
