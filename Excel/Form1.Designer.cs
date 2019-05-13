@@ -105,7 +105,7 @@
             // label_btn_abrir
             // 
             this.label_btn_abrir.AutoSize = true;
-            this.label_btn_abrir.Location = new System.Drawing.Point(512, 410);
+            this.label_btn_abrir.Location = new System.Drawing.Point(512, 411);
             this.label_btn_abrir.Name = "label_btn_abrir";
             this.label_btn_abrir.Size = new System.Drawing.Size(28, 13);
             this.label_btn_abrir.TabIndex = 5;
@@ -114,7 +114,7 @@
             // label_btn_exportar
             // 
             this.label_btn_exportar.AutoSize = true;
-            this.label_btn_exportar.Location = new System.Drawing.Point(758, 409);
+            this.label_btn_exportar.Location = new System.Drawing.Point(758, 411);
             this.label_btn_exportar.Name = "label_btn_exportar";
             this.label_btn_exportar.Size = new System.Drawing.Size(46, 13);
             this.label_btn_exportar.TabIndex = 6;
@@ -146,7 +146,7 @@
             // label_btn_blacklist
             // 
             this.label_btn_blacklist.AutoSize = true;
-            this.label_btn_blacklist.Location = new System.Drawing.Point(672, 410);
+            this.label_btn_blacklist.Location = new System.Drawing.Point(672, 411);
             this.label_btn_blacklist.Name = "label_btn_blacklist";
             this.label_btn_blacklist.Size = new System.Drawing.Size(46, 13);
             this.label_btn_blacklist.TabIndex = 9;
@@ -155,17 +155,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(572, 409);
+            this.label2.Location = new System.Drawing.Point(586, 411);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 13);
+            this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Configurações";
+            this.label2.Text = "WordList";
             // 
             // button2
             // 
-            this.button2.BackgroundImage = global::Excel.Properties.Resources.Developer_Black_Folder_icon;
+            this.button2.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(572, 338);
             this.button2.Margin = new System.Windows.Forms.Padding(0);
             this.button2.Name = "button2";
@@ -174,6 +173,7 @@
             this.button2.TabStop = false;
             this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 

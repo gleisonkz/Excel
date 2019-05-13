@@ -12,21 +12,23 @@ namespace Excel
         Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        string pathWordList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}wordlist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string versao = "Versão 1.0.14"; // Váriavel global para controle da versão.
 
         List<string> listaBlacklist = new List<string>();
+        List<string> listaWordList = new List<string>();
 
-        public void CarregaArquivoParaLista()
+        public void CarregaArquivoParaLista(List<string> lista, string path)
         {
             try
             {
-                if (File.Exists(pathBlacklist) == false)
+                if (File.Exists(path) == false)
                 {
-                    GravarListaNoArquivo();
+                    GravarListaNoArquivo(lista, path);
                 }
 
 
-                var sr = new StreamReader(pathBlacklist, Encoding.Default);
+                var sr = new StreamReader(path, Encoding.Default);
 
                 while (!sr.EndOfStream)
                 {
@@ -42,11 +44,11 @@ namespace Excel
 
         }
 
-        public void GravarListaNoArquivo()
+        public void GravarListaNoArquivo(List<string> lista, string path)
         {
-            var sw = new StreamWriter(pathBlacklist, false, Encoding.Default);
+            var sw = new StreamWriter(path, false, Encoding.Default);
             
-            foreach (var item in listaBlacklist)
+            foreach (var item in lista)
             {
                 sw.WriteLine(item);
             }
@@ -111,15 +113,23 @@ namespace Excel
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            CarregaArquivoParaLista();
+            CarregaArquivoParaLista(listaBlacklist, pathBlacklist);
+            CarregaArquivoParaLista(listaWordList, pathWordList);
         }
 
         private void btnBlacklistClick(object sender, EventArgs e)
         {
             var n = new Form_Blacklist(listaBlacklist,objFuncoes);
             n.ShowDialog();
-            GravarListaNoArquivo();
+            GravarListaNoArquivo(listaBlacklist, pathBlacklist);
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var n = new Form_Blacklist(listaWordList, objFuncoes);
+            n.ShowDialog();
+            GravarListaNoArquivo(listaWordList, pathWordList);
         }
     }
 }
