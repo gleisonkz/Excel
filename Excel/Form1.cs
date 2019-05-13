@@ -33,7 +33,7 @@ namespace Excel
                 while (!sr.EndOfStream)
                 {
                     var item = sr.ReadLine();
-                    listaBlacklist.Add(item);
+                    lista.Add(item);
                 }
                 sr.Dispose();
             }
@@ -122,7 +122,6 @@ namespace Excel
             var n = new Form_Blacklist(listaBlacklist,objFuncoes);
             n.ShowDialog();
             GravarListaNoArquivo(listaBlacklist, pathBlacklist);
-
         }
 
         private void button2_Click(object sender, EventArgs e)

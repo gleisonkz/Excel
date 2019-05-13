@@ -80,7 +80,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(182, 23);
             this.label3.TabIndex = 19;
-            this.label3.Text = "Lista de emails registrados";
+            this.label3.Text = "Lista de itens registrados";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ltb_emails
