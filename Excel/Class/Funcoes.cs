@@ -1,4 +1,6 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -70,7 +72,7 @@ namespace Excel.Class
                 {
                     //Read the first Sheet from Excel file.
                     //Faz a leitura da primeira planilha do arquivo
-                    IXLWorksheet workSheet = workBook.Worksheet(guiaPlanilha); //adiciona uma guia de planilha a pasta de trabalho criada
+                    IXLWorksheet workSheet = workBook.Worksheet(0);//adiciona uma guia de planilha a pasta de trabalho criada
 
                     bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
 
@@ -447,6 +449,77 @@ namespace Excel.Class
 
             dtgeral = dtgeral.DefaultView.ToTable(true, columns); //Remove os valores duplicados do DataTable
             return dtgeral; // Retorna o DataTable tratado.
+        }
+
+        public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist)
+        {
+            //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
+            string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
+
+
+            if (caminho == null)
+            {
+                MessageBox.Show("É necessario primeiro selecionar o caminho onde estão os arquivos",
+                    "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+            if (planilhas.Length == 0)
+            {
+                MessageBox.Show("Não existem planilhas no caminho selecionado",
+                    "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+            DataTable dtgeral = new DataTable(); // Instanciação de um novo DataTable.
+            var columns = new[] { "CNPJ", "VALOR", }; // Cria um array de string.
+
+            /* Para que seja possível adicionar colunas em um DataTable é necessario que o tipo de objeto a ser adicionado sejá do tipo DataColumn
+            portanto o comando abaixo executa (que utiliza uma lambda expression) a projeção do array de 
+            string para um array de DataColumn e adiciona ao DT. */
+
+            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W+"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
+
+
+            foreach (var UmaPlanilha in planilhas) //Inicia um loop por para cada arquivo excel encontrada na pasta informada 
+            {
+                // open the document read-only
+                SpreadsheetDocument document = SpreadsheetDocument.Open(UmaPlanilha, false);
+                SharedStringTable sharedStringTable = document.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                string cellValue = null;
+
+                foreach (WorksheetPart worksheetPart in document.WorkbookPart.WorksheetParts)
+                {
+                    foreach (SheetData sheetData in worksheetPart.Worksheet.Elements<SheetData>())
+                    {
+                        if (sheetData.HasChildren)
+                        {
+                            foreach (Row row in sheetData.Elements<Row>())
+                            {
+                                foreach (Cell cell in row.Elements<Cell>())
+                                {
+                                    cellValue = cell.InnerText;
+
+                                    if (cell.DataType == CellValues.SharedString)
+                                    {
+                                        Console.WriteLine("cell val: " + sharedStringTable.ElementAt(Int32.Parse(cellValue)).InnerText);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("cell val: " + cellValue);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                document.Close();
+
+
+            }
+
+            dtgeral = dtgeral.DefaultView.ToTable(true, columns); //Remove os valores duplicados do DataTable
+            return dtgeral;
         }
 
         public void Write(DataTable dt, string outputFilePath)

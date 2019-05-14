@@ -99,7 +99,12 @@ namespace Excel
 
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
+
+            var dtgeral2 = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
+
             var dtgeral = objFuncoes.PreencheDataTable(selectedFolder, listaBlacklist); //Chama o metodo responsável por preencher o DataTable.
+
+        
 
             if (dtgeral == null)
             {
