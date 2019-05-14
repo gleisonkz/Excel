@@ -1,6 +1,6 @@
 ﻿namespace Excel
 {
-    partial class Form_Blacklist
+    partial class Form_Blacklist_Wordlist
     {
         /// <summary>
         /// Required designer variable.
@@ -31,11 +31,11 @@
             this.btn_editar = new System.Windows.Forms.Button();
             this.btn_apagar = new System.Windows.Forms.Button();
             this.label_numero_registros = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label_itens = new System.Windows.Forms.Label();
             this.ltb_emails = new System.Windows.Forms.ListBox();
             this.btn_gravar = new System.Windows.Forms.Button();
             this.text_valor = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_textbox = new System.Windows.Forms.Label();
             this.btn_fechar = new System.Windows.Forms.Button();
             this.btn_novo = new System.Windows.Forms.Button();
             this.btn_cancelar = new System.Windows.Forms.Button();
@@ -74,14 +74,14 @@
             this.label_numero_registros.Text = "Qtd Registros: 0";
             this.label_numero_registros.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label3
+            // label_itens
             // 
-            this.label3.Location = new System.Drawing.Point(17, 149);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(182, 23);
-            this.label3.TabIndex = 19;
-            this.label3.Text = "Lista de itens registrados";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label_itens.Location = new System.Drawing.Point(17, 149);
+            this.label_itens.Name = "label_itens";
+            this.label_itens.Size = new System.Drawing.Size(182, 23);
+            this.label_itens.TabIndex = 19;
+            this.label_itens.Text = "Lista de itens registrados";
+            this.label_itens.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ltb_emails
             // 
@@ -97,7 +97,7 @@
             // btn_gravar
             // 
             this.btn_gravar.Enabled = false;
-            this.btn_gravar.Location = new System.Drawing.Point(198, 54);
+            this.btn_gravar.Location = new System.Drawing.Point(212, 54);
             this.btn_gravar.Name = "btn_gravar";
             this.btn_gravar.Size = new System.Drawing.Size(140, 38);
             this.btn_gravar.TabIndex = 13;
@@ -109,20 +109,20 @@
             // text_valor
             // 
             this.text_valor.Enabled = false;
-            this.text_valor.Location = new System.Drawing.Point(58, 28);
+            this.text_valor.Location = new System.Drawing.Point(72, 28);
             this.text_valor.MaxLength = 50;
             this.text_valor.Name = "text_valor";
             this.text_valor.Size = new System.Drawing.Size(280, 20);
             this.text_valor.TabIndex = 11;
             // 
-            // label1
+            // label_textbox
             // 
-            this.label1.Location = new System.Drawing.Point(14, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 23);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Email:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label_textbox.Location = new System.Drawing.Point(18, 26);
+            this.label_textbox.Name = "label_textbox";
+            this.label_textbox.Size = new System.Drawing.Size(54, 23);
+            this.label_textbox.TabIndex = 21;
+            this.label_textbox.Text = "Email:";
+            this.label_textbox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btn_fechar
             // 
@@ -149,7 +149,7 @@
             // btn_cancelar
             // 
             this.btn_cancelar.Enabled = false;
-            this.btn_cancelar.Location = new System.Drawing.Point(58, 54);
+            this.btn_cancelar.Location = new System.Drawing.Point(72, 54);
             this.btn_cancelar.Name = "btn_cancelar";
             this.btn_cancelar.Size = new System.Drawing.Size(140, 38);
             this.btn_cancelar.TabIndex = 23;
@@ -158,7 +158,7 @@
             this.btn_cancelar.UseVisualStyleBackColor = true;
             this.btn_cancelar.Click += new System.EventHandler(this.Btn_cancelar_Click);
             // 
-            // Form_Blacklist
+            // Form_Blacklist_Wordlist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -169,18 +169,18 @@
             this.Controls.Add(this.btn_editar);
             this.Controls.Add(this.btn_apagar);
             this.Controls.Add(this.label_numero_registros);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label_itens);
             this.Controls.Add(this.btn_gravar);
             this.Controls.Add(this.text_valor);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label_textbox);
             this.Controls.Add(this.btn_fechar);
             this.Controls.Add(this.ltb_emails);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form_Blacklist";
+            this.Name = "Form_Blacklist_Wordlist";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Blacklist - Inserir / Editar";
+            this.Text = "Blacklist / Wordlist - Inserir / Editar";
             this.Load += new System.EventHandler(this.Form_Blacklist_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -192,11 +192,11 @@
         private System.Windows.Forms.Button btn_editar;
         private System.Windows.Forms.Button btn_apagar;
         private System.Windows.Forms.Label label_numero_registros;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_itens;
         private System.Windows.Forms.ListBox ltb_emails;
         private System.Windows.Forms.Button btn_gravar;
         private System.Windows.Forms.TextBox text_valor;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_textbox;
         private System.Windows.Forms.Button btn_fechar;
         private System.Windows.Forms.Button btn_novo;
         private System.Windows.Forms.Button btn_cancelar;

@@ -5,28 +5,44 @@ using System.Windows.Forms;
 
 namespace Excel
 {
-    public partial class Form_Blacklist : Form
+    public partial class Form_Blacklist_Wordlist : Form
     {
         private readonly List<string> listaBlacklist;
         private readonly Funcoes objFuncoes;
 
         public bool Editando { get; set; }
+        public int tipo { get; set; }
 
         //public Form_Blacklist()
         //{
         //    //InitializeComponent();
         //}   
 
-        public Form_Blacklist(List<string> listaBlacklist, Funcoes objFuncoes)
+        public Form_Blacklist_Wordlist(List<string> listaBlacklist, Funcoes objFuncoes ,int tipo)
         {
             InitializeComponent();
             this.listaBlacklist = listaBlacklist;
             this.objFuncoes = objFuncoes;
+            this.tipo = tipo;
         }
 
         private void Form_Blacklist_Load(object sender, EventArgs e)
         {
             AtualizarListBox();
+
+            if (tipo == 1)
+            {
+                label_itens.Text = $"Lista de emails registrados:";
+                label_textbox.Text = $"Email:";
+                this.Text = "Blacklist - Inserir/Editar";
+            }
+
+            if (tipo == 2)
+            {
+                label_itens.Text = $"Lista de palavras registradas:";
+                label_textbox.Text = $"Palavra:";
+                this.Text = "Wordlist - Inserir/Editar";
+            }
         } 
 
         private void BtnGravarClick(object sender, EventArgs e)

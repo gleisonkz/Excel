@@ -217,7 +217,7 @@ namespace Excel.Class
             return dtgeral;
         }
 
-        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo, List<string> listaBlacklist)
+        public DataTable PreencheDataTable(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -376,7 +376,8 @@ namespace Excel.Class
 
                                         if (dadosValidos)
                                         {
-                                            bool contemCONT = dado.Contains("CONT"); //Discarta os registros que contenham "CONT"
+                                            bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
+                                                                                        
 
                                             switch (Etipo)
                                             {

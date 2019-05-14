@@ -47,7 +47,7 @@ namespace Excel
         public void GravarListaNoArquivo(List<string> lista, string path)
         {
             var sw = new StreamWriter(path, false, Encoding.Default);
-            
+
             foreach (var item in lista)
             {
                 sw.WriteLine(item);
@@ -60,7 +60,7 @@ namespace Excel
         {
             InitializeComponent();
             label_versao.Text = versao; // atribui a versão na label.
-            
+
         }
 
         private void btnExportarClick(object sender, EventArgs e)
@@ -72,10 +72,10 @@ namespace Excel
             string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados.txt");
 
             //Recebe os DataTable de cada tipo e atribui a uma variavel.
-            var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist);
-            var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist);
-            var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist);
-            var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist);
+            var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
+            var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList);
+            var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
+            var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
 
             //Faz a criação dos arquivos de texto e inserção dos dados.
             objFuncoes.Write(dtEmail, caminhoTxtEmail);
@@ -99,7 +99,7 @@ namespace Excel
 
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
-            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder,listaBlacklist); //Chama o metodo responsável por preencher o DataTable.
+            var dtgeral = objFuncoes.PreencheDataTable(selectedFolder, listaBlacklist); //Chama o metodo responsável por preencher o DataTable.
 
             if (dtgeral == null)
             {
@@ -119,14 +119,14 @@ namespace Excel
 
         private void btnBlacklistClick(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist(listaBlacklist,objFuncoes);
+            var n = new Form_Blacklist_Wordlist(listaBlacklist, objFuncoes, 1);
             n.ShowDialog();
             GravarListaNoArquivo(listaBlacklist, pathBlacklist);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist(listaWordList, objFuncoes);
+            var n = new Form_Blacklist_Wordlist(listaWordList, objFuncoes, 2);
             n.ShowDialog();
             GravarListaNoArquivo(listaWordList, pathWordList);
         }
