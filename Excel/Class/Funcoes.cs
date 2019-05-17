@@ -35,7 +35,7 @@ namespace Excel.Class
             { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } }
         };
 
-        public DataTable PreencheDataTable(string caminho, List<string> listaBlacklist)
+        public DataTable PreencheDataTable(string caminho, List<string> listaBlacklist, List<string> listaWordlist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -54,8 +54,6 @@ namespace Excel.Class
                 return null;
             }
 
-
-            string guiaPlanilha = "Sheet1"; // Cria uma variavel com o nome da guia da planilha que será lida.
             DataTable dtgeral = new DataTable(); // Instanciação de um novo DataTable.
             var columns = new[] { "CNPJ", "VALOR", }; // Cria um array de string.
 
@@ -64,6 +62,7 @@ namespace Excel.Class
             string para um array de DataColumn e adiciona ao DT. */
 
             dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W+"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
 
             foreach (var UmaPlanilha in planilhas) //Inicia um loop por para cada arquivo excel encontrada na pasta informada 
             {
@@ -72,14 +71,12 @@ namespace Excel.Class
                 {
                     //Read the first Sheet from Excel file.
                     //Faz a leitura da primeira planilha do arquivo
-                    IXLWorksheet workSheet = workBook.Worksheet(0);//adiciona uma guia de planilha a pasta de trabalho criada
+                    IXLWorksheet workSheet = workBook.Worksheet("Sheet1");//adiciona uma guia de planilha a pasta de trabalho criada
 
                     bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
 
                     // Cria uma lista para que sejam armazenados os índices.
-                    var lstIndicesEmails = new List<int>();
-                    var lstIndicesTelefones = new List<int>();
-                    var lstIndicesNuFuncionarios = new List<int>();
+                    var lstIndices = new List<int>();
 
                     // Loop para percorrer a primeira linha da planilha e lidentificar os índices das colunas.
 
@@ -87,7 +84,6 @@ namespace Excel.Class
                     {
                         if (firstRow) //Usa a primeira linha para adicionar as colunas no DataTable.
                         {
-                            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
 
                             int indexCells = 0; // Variavel criada para controlar o índice da celula
 
@@ -97,16 +93,16 @@ namespace Excel.Class
 
                                 if (str.ToUpper().Contains("EMAIL"))
                                 {
-                                    lstIndicesEmails.Add(indexCells); //Adiciona a lista de índices
+                                    lstIndices.Add(indexCells); //Adiciona a lista de índices
 
                                 }
                                 if (str.ToUpper().Contains("TELEFONE"))
                                 {
-                                    lstIndicesTelefones.Add(indexCells); //Adiciona a lista de índices
+                                    lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
                                 if (str.ToUpper().Contains("EMPREGADOS") || str.ToUpper().Contains("FUNCIONARIOS"))
                                 {
-                                    lstIndicesNuFuncionarios.Add(indexCells); //Adiciona a lista de índices
+                                    lstIndices.Add(indexCells); //Adiciona a lista de índices
                                 }
                                 indexCells++;
 
@@ -116,10 +112,9 @@ namespace Excel.Class
                         else // Percorre o restante das linhas para recuperar os valores dos índices identificados
                         {
                             string cnpj = null;
-                            string email = null;
+                            string valorcell = null;
                             string area = null;
-                            string nuEmpregados = null;
-                            string telefone = null;
+
 
                             void RecuperarValor(List<int> lista, string valor)
                             {
@@ -207,9 +202,8 @@ namespace Excel.Class
                                     }
                                 }
                             }
-                            RecuperarValor(lstIndicesEmails, email);
-                            RecuperarValor(lstIndicesNuFuncionarios, nuEmpregados);
-                            RecuperarValor(lstIndicesTelefones, telefone);
+                            RecuperarValor(lstIndices, valorcell);
+
                         }
                     }
                 }
@@ -485,8 +479,12 @@ namespace Excel.Class
             {
                 // open the document read-only
                 SpreadsheetDocument document = SpreadsheetDocument.Open(UmaPlanilha, false);
-                SharedStringTable sharedStringTable = document.WorkbookPart.SharedStringTablePart.SharedStringTable;
-                string cellValue = null;
+                WorkbookPart workbookPart = document.WorkbookPart;
+                bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
+
+                // Cria uma lista para que sejam armazenados os índices.
+                var lstIndices = new List<int>();
+
 
                 foreach (WorksheetPart worksheetPart in document.WorkbookPart.WorksheetParts)
                 {
@@ -496,25 +494,147 @@ namespace Excel.Class
                         {
                             foreach (Row row in sheetData.Elements<Row>())
                             {
-                                foreach (Cell cell in row.Elements<Cell>())
+                                if (firstRow)
                                 {
-                                    cellValue = cell.InnerText;
+                                    int indexCells = 0; // Variavel criada para controlar o índice da celula
 
-                                    if (cell.DataType == CellValues.SharedString)
+                                    foreach (Cell cell in row.Elements<Cell>()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                                     {
-                                        Console.WriteLine("cell val: " + sharedStringTable.ElementAt(Int32.Parse(cellValue)).InnerText);
+                                        var str = ojbRegex.Replace(cell.InnerText.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
+
+                                        if (dicTipo[Etipo].Any(c => c.Contains(str.ToUpper()) || str.ToUpper().Contains(c)))
+                                        {
+                                            lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                        }
+
+                                        indexCells++;
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine("cell val: " + cellValue);
-                                    }
+                                    firstRow = false;
+
+                                    
+
                                 }
+                                else // Percorre o restante das linhas para recuperar os valores dos índices identificados
+                                {
+                                    string cnpj = null;
+                                    string dado = null;
+                                    string area = null;
+
+                                    void RecuperarValor(List<int> lista, string valor, EtipoValor tipo)
+                                    {
+                                        int indexCells = 0;
+                                        
+                                        //Loop para percorrer as celulas da linha por cada índice encontrado e recuperar os valores da celula.
+                                        foreach (var item in lista)
+                                        {
+
+                                            foreach (Cell cell in row.Elements<Cell>())
+                                            {
+                                                try
+                                                {
+                                                    //CNPJ
+                                                    if (indexCells == 3)
+                                                    {
+                                                        cnpj = cell.InnerText.ToString();
+                                                    }
+
+                                                    //VALOR
+                                                    if (item == indexCells)
+                                                    {
+                                                        dado = cell.InnerText.ToString();
+
+                                                    }
+                                                    //AREA
+                                                    if (indexCells == 13)
+                                                    {
+                                                        area = cell.InnerText.ToString();
+                                                    }
+
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    throw ex;
+                                                }
+                                                indexCells++;
+
+                                                // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
+                                                var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
+
+                                                if (dadosValidos)
+                                                {
+                                                    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
+
+
+                                                    switch (Etipo)
+                                                    {
+                                                        case EtipoValor.Email:
+
+                                                            if (contemCONT == false) //Verificar se o e-mail não contém "CONT"
+                                                            {
+                                                                //Verificar se o e-mail consta na blacklist
+                                                                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
+
+                                                                if (!existe)
+                                                                {
+                                                                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                                }
+                                                            }
+                                                            break;
+
+                                                        case EtipoValor.NuFuncionaros:
+
+                                                            if (area == "ÁREA EMPRESÁRIO" && dado == "0")
+                                                            {
+                                                                continue;
+                                                            }
+                                                            else
+                                                            {
+                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado });
+                                                            }
+
+                                                            break;
+
+                                                        case EtipoValor.Telefone:
+
+                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado });
+
+                                                            break;
+
+                                                        case EtipoValor.EmailContador:
+
+                                                            if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
+                                                            {
+                                                                //Verificar se o e-mail consta na blacklist
+                                                                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
+
+                                                                if (!existe)
+                                                                {
+                                                                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                                }
+                                                            }
+
+                                                            break;
+                                                        default:
+                                                            MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
+                                                            break;
+                                                    }
+                                                    break;
+                                                }
+                                            }
+
+                                            indexCells = 0;
+                                        }
+                                    }
+                                    RecuperarValor(lstIndices, dado, Etipo);
+                                }
+
+
+
                             }
                         }
                     }
                 }
-                document.Close();
-
+                document.Dispose();
 
             }
 
