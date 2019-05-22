@@ -13,7 +13,7 @@ namespace Excel
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathWordList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}wordlist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = "Versão 1.0.14"; // Váriavel global para controle da versão.
+        string versao = "Versão 1.0.15"; // Váriavel global para controle da versão.
 
         List<string> listaBlacklist = new List<string>();
         List<string> listaWordList = new List<string>();
@@ -33,7 +33,11 @@ namespace Excel
                 while (!sr.EndOfStream)
                 {
                     var item = sr.ReadLine();
-                    lista.Add(item);
+
+                    if (item.IsNullOrEmpty() == false)
+                    {
+                        lista.Add(item);
+                    }
                 }
                 sr.Dispose();
             }
@@ -65,34 +69,31 @@ namespace Excel
 
         private void btnExportarClick(object sender, EventArgs e)
         {
+            
+            try
+            {
+                //Recebe os DataTable de cada tipo e atribui a uma variavel.
+                var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
+                var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList);
+                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
+                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
 
+                //Cria os endereço e nomes dos arquivos que serão salvos.
+                string caminhoTxtEmail = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmail.Rows.Count}.txt");
+                string caminhoTxtEmailContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailContador.Rows.Count}.txt");
+                string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES - Qtd {dtTelefone.Rows.Count}.txt");
+                string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados - Qtd {dtNuEmpregados.Rows.Count}.txt");
 
-            //Recebe os DataTable de cada tipo e atribui a uma variavel.
-            //var dtEmail = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
-            //var dtEmailContador = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList);
-            //var dtTelefone = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
-            //var dtNuEmpregados = objFuncoes.PreencheDataTable(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
-
-            //Recebe os DataTable de cada tipo e atribui a uma variavel.
-            var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
-            var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList);
-            var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
-            var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
-
-            //Cria os endereço e nomes dos arquivos que serão salvos.
-            string caminhoTxtEmail = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmail.Rows.Count}.txt");
-            string caminhoTxtEmailContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailContador.Rows.Count}.txt");
-            string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES - Qtd {dtTelefone.Rows.Count}.txt");
-            string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados - Qtd {dtNuEmpregados.Rows.Count}.txt");
-
-
-
-
-            //Faz a criação dos arquivos de texto e inserção dos dados.
-            objFuncoes.Write(dtEmail, caminhoTxtEmail);
-            objFuncoes.Write(dtEmailContador, caminhoTxtEmailContador);
-            objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
-            objFuncoes.Write(dtNuEmpregados, caminhoTxtNuEmpregados);
+                //Faz a criação dos arquivos de texto e inserção dos dados.
+                objFuncoes.Write(dtEmail, caminhoTxtEmail);
+                objFuncoes.Write(dtEmailContador, caminhoTxtEmailContador);
+                objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
+                objFuncoes.Write(dtNuEmpregados, caminhoTxtNuEmpregados);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             MessageBox.Show("Informações exportadas para " + selectedFolder.ToString(),
             "Exportação Concluída", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -111,20 +112,16 @@ namespace Excel
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
 
-            //var dtgeral2 = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
+            var dtgeral = objFuncoes.PreencheDataTableOpenXML(selectedFolder, listaBlacklist, listaWordList); //Chama o metodo responsável por preencher o DataTable.
 
-            //var dtgeral = objFuncoes.PreencheDataTable(selectedFolder, listaBlacklist, listaWordList); //Chama o metodo responsável por preencher o DataTable.
-
-
-
-            //if (dtgeral == null)
-            //{
-            //    return;
-            //}
+            if (dtgeral == null)
+            {
+                return;
+            }
 
             btn_exportar.Enabled = true; //Habilita o botão de exportar.
             btn_exportar.Focus(); //Move o tabindex para o botão exportar.
-           // dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
+            dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -140,7 +137,7 @@ namespace Excel
             GravarListaNoArquivo(listaBlacklist, pathBlacklist);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnWordlistClick(object sender, EventArgs e)
         {
             var n = new Form_Blacklist_Wordlist(listaWordList, objFuncoes, 2);
             n.ShowDialog();

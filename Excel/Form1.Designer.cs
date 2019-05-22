@@ -40,7 +40,7 @@
             this.btn_blacklist = new System.Windows.Forms.Button();
             this.label_btn_blacklist = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_wordlist = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -161,19 +161,19 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "WordList";
             // 
-            // button2
+            // btn_wordlist
             // 
-            this.button2.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(572, 338);
-            this.button2.Margin = new System.Windows.Forms.Padding(0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 66);
-            this.button2.TabIndex = 10;
-            this.button2.TabStop = false;
-            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btn_wordlist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
+            this.btn_wordlist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_wordlist.Location = new System.Drawing.Point(572, 338);
+            this.btn_wordlist.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_wordlist.Name = "btn_wordlist";
+            this.btn_wordlist.Size = new System.Drawing.Size(75, 66);
+            this.btn_wordlist.TabIndex = 10;
+            this.btn_wordlist.TabStop = false;
+            this.btn_wordlist.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btn_wordlist.UseVisualStyleBackColor = false;
+            this.btn_wordlist.Click += new System.EventHandler(this.btnWordlistClick);
             // 
             // Form1
             // 
@@ -182,7 +182,7 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(845, 460);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btn_wordlist);
             this.Controls.Add(this.label_btn_blacklist);
             this.Controls.Add(this.btn_blacklist);
             this.Controls.Add(this.label_versao);
@@ -219,7 +219,7 @@
         private System.Windows.Forms.Button btn_blacklist;
         private System.Windows.Forms.Label label_btn_blacklist;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_wordlist;
     }
 }
 
