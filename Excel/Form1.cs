@@ -18,6 +18,29 @@ namespace Excel
         List<string> listaBlacklist = new List<string>();
         List<string> listaWordList = new List<string>();
 
+        //=============================================================================================================================================================
+
+        public Form1()
+        {
+            InitializeComponent();
+            label_versao.Text = versao; // atribui a versão na label.
+        }       
+
+        //=============================================================================================================================================================
+
+        public void GravarListaNoArquivo(List<string> lista, string path)
+        {
+            var sw = new StreamWriter(path, false, Encoding.Default);
+
+            foreach (var item in lista)
+            {
+                sw.WriteLine(item);
+            }
+            sw.Dispose();
+        }
+
+        //=============================================================================================================================================================
+
         public void CarregaArquivoParaLista(List<string> lista, string path)
         {
             try
@@ -26,7 +49,6 @@ namespace Excel
                 {
                     GravarListaNoArquivo(lista, path);
                 }
-
 
                 var sr = new StreamReader(path, Encoding.Default);
 
@@ -48,24 +70,7 @@ namespace Excel
 
         }
 
-        public void GravarListaNoArquivo(List<string> lista, string path)
-        {
-            var sw = new StreamWriter(path, false, Encoding.Default);
-
-            foreach (var item in lista)
-            {
-                sw.WriteLine(item);
-            }
-            sw.Dispose();
-
-        }
-
-        public Form1()
-        {
-            InitializeComponent();
-            label_versao.Text = versao; // atribui a versão na label.
-
-        }
+        //=============================================================================================================================================================
 
         private void btnExportarClick(object sender, EventArgs e)
         {
@@ -99,6 +104,8 @@ namespace Excel
             "Exportação Concluída", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+        //=============================================================================================================================================================
+
         private void btnAbrirClick(object sender, EventArgs e)
         {
             FolderBrowserDialog Abrir = new FolderBrowserDialog(); //Instanciação da classe para abrir caixa de dialogo.
@@ -124,24 +131,53 @@ namespace Excel
             dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
         }
 
+        //=============================================================================================================================================================
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            CarregaArquivoParaLista(listaBlacklist, pathBlacklist);
-            CarregaArquivoParaLista(listaWordList, pathWordList);
+            try
+            {
+                CarregaArquivoParaLista(listaBlacklist, pathBlacklist);
+                CarregaArquivoParaLista(listaWordList, pathWordList);
+            }
+            catch (Exception ex )
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
+        //=============================================================================================================================================================
 
         private void btnBlacklistClick(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist_Wordlist(listaBlacklist, objFuncoes, 1);
-            n.ShowDialog();
-            GravarListaNoArquivo(listaBlacklist, pathBlacklist);
+            try
+            {
+                var n = new Form_Blacklist_Wordlist(listaBlacklist, objFuncoes, 1);
+                n.ShowDialog();
+                GravarListaNoArquivo(listaBlacklist, pathBlacklist);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
+        //=============================================================================================================================================================
 
         private void btnWordlistClick(object sender, EventArgs e)
         {
-            var n = new Form_Blacklist_Wordlist(listaWordList, objFuncoes, 2);
-            n.ShowDialog();
-            GravarListaNoArquivo(listaWordList, pathWordList);
+            try
+            {
+                var n = new Form_Blacklist_Wordlist(listaWordList, objFuncoes, 2);
+                n.ShowDialog();
+                GravarListaNoArquivo(listaWordList, pathWordList);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
+        //=============================================================================================================================================================
     }
 }

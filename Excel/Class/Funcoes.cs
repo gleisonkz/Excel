@@ -23,7 +23,7 @@ namespace Excel.Class
             Telefone = 3,
             EmailContador = 4
         }
-
+        
         public Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
         {
             { EtipoValor.Email, new [] { "EMAIL" } },
@@ -31,6 +31,8 @@ namespace Excel.Class
             { EtipoValor.EmailContador, new [] { "EMAIL" } },
             { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } }
         };
+
+        //=============================================================================================================================================================
 
         public DataTable PreencheDataTableOpenXML(string caminho, List<string> listaBlacklist, List<string> listaWordlist)
         {
@@ -183,6 +185,8 @@ namespace Excel.Class
             dtgeral = dtgeral.DefaultView.ToTable(true, columns); //Remove os valores duplicados do DataTable
             return dtgeral;
         }
+
+        //=============================================================================================================================================================
 
         public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist)
         {
@@ -381,6 +385,8 @@ namespace Excel.Class
             return dtgeral;
         }
 
+        //=============================================================================================================================================================
+
         public void Write(DataTable dt, string outputFilePath)
         {
             using (StreamWriter sw = new StreamWriter(outputFilePath, false))
@@ -392,5 +398,7 @@ namespace Excel.Class
                 sw.Close();
             }
         }
+
+        //=============================================================================================================================================================
     }
 }
