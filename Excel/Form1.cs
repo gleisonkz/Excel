@@ -1,4 +1,5 @@
 ﻿using Excel.Class;
+using Excel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,8 @@ namespace Excel
         {
             InitializeComponent();
             label_versao.Text = versao; // atribui a versão na label.
+
+            
         }       
 
         //=============================================================================================================================================================

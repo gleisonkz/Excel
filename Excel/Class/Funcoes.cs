@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Excel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Excel.Class
 {
-    public class Funcoes
+    public class Funcoes : IStrategyValidações
     {
         public Funcoes()
         {
@@ -23,7 +24,7 @@ namespace Excel.Class
             Telefone = 3,
             EmailContador = 4
         }
-        
+
         public Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
         {
             { EtipoValor.Email, new [] { "EMAIL" } },
@@ -54,7 +55,7 @@ namespace Excel.Class
                 MessageBox.Show("Não existem planilhas no caminho selecionado",
                     "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
-            } 
+            }
             #endregion
 
             DataTable dtgeral = new DataTable();
@@ -187,7 +188,7 @@ namespace Excel.Class
         }
 
         //=============================================================================================================================================================
-
+        
         public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
@@ -254,7 +255,7 @@ namespace Excel.Class
                                     }
                                     firstRow = false;
 
-                                    
+
 
                                 }
                                 else // Percorre o restante das linhas para recuperar os valores dos índices identificados
@@ -266,7 +267,7 @@ namespace Excel.Class
                                     void RecuperarValor(List<int> lista, string valor, EtipoValor tipo)
                                     {
                                         int indexCells = 0;
-                                        
+
                                         //Loop para percorrer as celulas da linha por cada índice encontrado e recuperar os valores da celula.
                                         foreach (var item in lista)
                                         {
@@ -312,7 +313,7 @@ namespace Excel.Class
                                                     {
                                                         case EtipoValor.Email:
 
-                                                            if (contemCONT == false) //Verificar se o e-mail não contém "CONT"
+                                                            if (contemCONT == false) //Verificar se o e-mail não contém nenhuma das palavras definidas na wordlist.
                                                             {
                                                                 //Verificar se o e-mail consta na blacklist
                                                                 var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
@@ -398,6 +399,10 @@ namespace Excel.Class
                 sw.Close();
             }
         }
+
+        //=============================================================================================================================================================
+
+        public void Execute(string cnpj, string valor, EtipoValor tipo) { }
 
         //=============================================================================================================================================================
     }

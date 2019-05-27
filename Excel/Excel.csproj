@@ -36,9 +36,6 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
-    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -83,6 +80,7 @@
     <Compile Include="Form_Blacklist_Wordlist.Designer.cs">
       <DependentUpon>Form_Blacklist_Wordlist.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IStrategyValidarTIpo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -116,13 +114,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Developer-Black-Folder-icon.png" />
     <None Include="Resources\Group-Black-Folder-icon.png" />
     <None Include="Resources\Generic-Black-Folder-icon.png" />
     <None Include="Resources\Downloads-Black-Folder-icon.png" />
-    <None Include="Resources\icon.png" />
     <None Include="Resources\icon.ico" />
     <Content Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
