@@ -86,6 +86,12 @@ namespace Excel
                 var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
                 var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
 
+                if (dtEmail.Rows.Count == 0 && dtEmailContador.Rows.Count == 0 && dtTelefone.Rows.Count== 0 && dtNuEmpregados.Rows.Count == 0)
+                {
+                    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.","Atenção",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    return;
+                }
+
                 //Cria os endereço e nomes dos arquivos que serão salvos.
                 string caminhoTxtEmail = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmail.Rows.Count}.txt");
                 string caminhoTxtEmailContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailContador.Rows.Count}.txt");
@@ -124,8 +130,9 @@ namespace Excel
 
             var dtgeral = objFuncoes.PreencheDataTableOpenXML(selectedFolder, listaBlacklist, listaWordList); //Chama o metodo responsável por preencher o DataTable.
 
-            if (dtgeral == null)
+            if (dtgeral.Rows.Count == 0 || dtgeral == null)
             {
+                MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

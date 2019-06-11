@@ -13,14 +13,14 @@ namespace Excel.Interfaces
 
     public interface IStrategyValidações
     {
-        void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "");
+        void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "");
     }
 
     //=============================================================================================================================================================
 
     public class IStrategyValidaçõesTipoEmail : IStrategyValidações
     {
-        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => cnpj.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
@@ -41,7 +41,7 @@ namespace Excel.Interfaces
 
     public class IStrategyValidaçõesTipoEmailContador : IStrategyValidações
     {
-        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => cnpj.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
@@ -62,7 +62,7 @@ namespace Excel.Interfaces
 
     public class IStrategyValidaçõesTipoTelefone : IStrategyValidações
     {
-        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor });
@@ -74,7 +74,7 @@ namespace Excel.Interfaces
 
     public class IStrategyValidaçõesTipoNuEmpregados : IStrategyValidações
     {
-        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
             {
 

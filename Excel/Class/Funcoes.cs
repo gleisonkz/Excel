@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Excel.Class
 {
-    public class Funcoes : IStrategyValidações
+    public class Funcoes
     {
 
         public enum EtipoValor
@@ -328,70 +328,69 @@ namespace Excel.Class
                                                 // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                                 var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
-                                                if (dadosValidos)
-                                                {
-                                                    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
-                                                    
+                                                var strategy = CreateStrategyValidações(tipo);
+                                                strategy.Execute(cnpj, dado, dtgeral, listaBlacklist, listaWordlist);
 
+                                                //if (dadosValidos)
+                                                //{
+                                                //    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
+                                                //    switch (Etipo)
+                                                //    {
+                                                //        case EtipoValor.Email:
 
+                                                //            if (contemCONT == false) //Verificar se o e-mail não contém nenhuma das palavras definidas na wordlist.
+                                                //            {
+                                                //                //Verificar se o e-mail consta na blacklist
+                                                //                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
 
-                                                    switch (Etipo)
-                                                    {
-                                                        case EtipoValor.Email:
+                                                //                if (!existe)
+                                                //                {
+                                                //                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                //                }
+                                                //            }
+                                                //            break;
 
-                                                            if (contemCONT == false) //Verificar se o e-mail não contém nenhuma das palavras definidas na wordlist.
-                                                            {
-                                                                //Verificar se o e-mail consta na blacklist
-                                                                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
+                                                //        case EtipoValor.NuFuncionaros:
 
-                                                                if (!existe)
-                                                                {
-                                                                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                                }
-                                                            }
-                                                            break;
+                                                //            if (area == "ÁREA EMPRESÁRIO" && dado == "0")
+                                                //            {
+                                                //                continue;
+                                                //            }
+                                                //            else
+                                                //            {
+                                                //                dtgeral.Rows.Add(new object[2] { cnpj, dado });
+                                                //            }
 
-                                                        case EtipoValor.NuFuncionaros:
+                                                //            break;
 
-                                                            if (area == "ÁREA EMPRESÁRIO" && dado == "0")
-                                                            {
-                                                                continue;
-                                                            }
-                                                            else
-                                                            {
-                                                                dtgeral.Rows.Add(new object[2] { cnpj, dado });
-                                                            }
+                                                //        case EtipoValor.Telefone:
 
-                                                            break;
+                                                //            dtgeral.Rows.Add(new object[2] { cnpj, dado });
 
-                                                        case EtipoValor.Telefone:
+                                                //            break;
 
-                                                            dtgeral.Rows.Add(new object[2] { cnpj, dado });
+                                                //        case EtipoValor.EmailContador:
 
-                                                            break;
+                                                //            if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
+                                                //            {
+                                                //                //Verificar se o e-mail consta na blacklist
+                                                //                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
 
-                                                        case EtipoValor.EmailContador:
+                                                //                if (!existe)
+                                                //                {
+                                                //                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
+                                                //                }
+                                                //            }
 
-                                                            if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
-                                                            {
-                                                                //Verificar se o e-mail consta na blacklist
-                                                                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
-
-                                                                if (!existe)
-                                                                {
-                                                                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                                }
-                                                            }
-
-                                                            break;
-                                                        default:
-                                                            MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
-                                                            break;
-                                                    }
-                                                    break;
-                                                }
+                                                //            break;
+                                                //        default:
+                                                //            MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
+                                                //            break;
+                                                //    }S
+                                                //    break;
+                                                //}
                                             }
 
                                             indexCells = 0;
@@ -427,14 +426,35 @@ namespace Excel.Class
                 sw.Close();
             }
         }
-                
+
         //=============================================================================================================================================================
 
-        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor)
         {
-            
+            IStrategyValidações strategy = null;
+
+            switch (etipoValor)
+            {              
+                case EtipoValor.Email:
+                    strategy =  new IStrategyValidaçõesTipoEmail();
+                    break;
+                case EtipoValor.NuFuncionaros:
+                    strategy = new  IStrategyValidaçõesTipoNuEmpregados();
+                    break;
+                case EtipoValor.Telefone:
+                    strategy = new IStrategyValidaçõesTipoTelefone();
+                    break;
+                case EtipoValor.EmailContador:
+                    strategy = new IStrategyValidaçõesTipoEmailContador();
+                    break;
+                default:
+                    break;
+            }
+
+            return strategy;
         }
 
         //=============================================================================================================================================================
+
     }
 }
