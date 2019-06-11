@@ -80,7 +80,7 @@
     <Compile Include="Form_Blacklist_Wordlist.Designer.cs">
       <DependentUpon>Form_Blacklist_Wordlist.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IStrategyValidarTIpo.cs" />
+    <Compile Include="Interfaces\IStrategyValidarTipo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

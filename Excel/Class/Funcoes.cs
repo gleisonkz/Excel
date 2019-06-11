@@ -13,9 +13,6 @@ namespace Excel.Class
 {
     public class Funcoes : IStrategyValidações
     {
-        public Funcoes()
-        {
-        }
 
         public enum EtipoValor
         {
@@ -25,6 +22,8 @@ namespace Excel.Class
             EmailContador = 4
         }
 
+        //=============================================================================================================================================================
+
         public Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
         {
             { EtipoValor.Email, new [] { "EMAIL" } },
@@ -32,6 +31,31 @@ namespace Excel.Class
             { EtipoValor.EmailContador, new [] { "EMAIL" } },
             { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } }
         };
+
+        //=============================================================================================================================================================
+
+        public Funcoes()
+        {
+        }
+
+        //=============================================================================================================================================================
+
+        public Funcoes(IStrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail,
+                       IStrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador,
+                       IStrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone,
+                       IStrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados
+                       )
+        {
+            this.strategyValidaçõesTipoEmail = strategyValidaçõesTipoEmail;
+            this.strategyValidaçõesTipoEmailContador = strategyValidaçõesTipoEmailContador;
+            this.strategyValidaçõesTipoTelefone = strategyValidaçõesTipoTelefone;
+            this.strategyValidaçõesTipoNuEmpregados = strategyValidaçõesTipoNuEmpregados;
+        }
+
+        private readonly IStrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail;
+        private readonly IStrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador;
+        private readonly IStrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone;
+        private readonly IStrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados;
 
         //=============================================================================================================================================================
 
@@ -308,6 +332,10 @@ namespace Excel.Class
                                                 {
                                                     bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
+                                                    
+
+
+
 
                                                     switch (Etipo)
                                                     {
@@ -399,10 +427,13 @@ namespace Excel.Class
                 sw.Close();
             }
         }
-
+                
         //=============================================================================================================================================================
 
-        public void Execute(string cnpj, string valor, EtipoValor tipo) { }
+        public void Execute(string cnpj, string valor, EtipoValor tipo, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
+        {
+            
+        }
 
         //=============================================================================================================================================================
     }
