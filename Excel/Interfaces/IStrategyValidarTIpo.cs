@@ -22,7 +22,7 @@ namespace Excel.Interfaces
     {
         public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
-            bool contemCONT = listaWordlist.Any(c => cnpj.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
+            bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
             if (contemCONT == false) //Verificar se o e-mail não contém nenhuma das palavras definidas na wordlist.
             {
@@ -43,7 +43,7 @@ namespace Excel.Interfaces
     {
         public void Execute(string cnpj, string valor, DataTable dataTable, List<string> listaBlacklist, List<string> listaWordlist, string area = "")
         {
-            bool contemCONT = listaWordlist.Any(c => cnpj.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
+            bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
 
             if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
             {

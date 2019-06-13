@@ -90,7 +90,6 @@ namespace Excel.Class
             string para um array de DataColumn e adiciona ao DT. */
 
             dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
-
             Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W+"); //Cria um ojbeto contendo uma regular expression que remove os caracteres especiais
 
             foreach (var UmaPlanilha in planilhas) //Inicia um loop por para cada arquivo excel encontrada na pasta informada 
@@ -139,11 +138,13 @@ namespace Excel.Class
                                 }
                                 else // Percorre o restante das linhas para recuperar os valores dos índices identificados
                                 {
-                                    string cnpj = null;
+                                    string cnpjPlanilha = null;
                                     string valor = null;
-                                    string area = null;
+                                    string areaPlanilha = null;
+                                    
+                                    RecuperarValor(lstIndices, valor);
 
-                                    void RecuperarValor(List<int> lista, string v)
+                                    void RecuperarValor(List<int> lista, string valorCelulaPanilha)
                                     {
                                         int indexCells = 0;
 
@@ -158,19 +159,19 @@ namespace Excel.Class
                                                     //CNPJ
                                                     if (indexCells == 3)
                                                     {
-                                                        cnpj = cell.InnerText.ToString();
+                                                        cnpjPlanilha = cell.InnerText.ToString();
                                                     }
 
                                                     //VALOR
                                                     if (item == indexCells)
                                                     {
-                                                        v = cell.InnerText.ToString();
+                                                        valorCelulaPanilha = cell.InnerText.ToString();
 
                                                     }
                                                     //AREA
                                                     if (indexCells == 13)
                                                     {
-                                                        area = cell.InnerText.ToString();
+                                                        areaPlanilha = cell.InnerText.ToString();
                                                     }
 
                                                 }
@@ -181,16 +182,16 @@ namespace Excel.Class
                                                 indexCells++;
 
                                                 // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
-                                                var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(v) == false;
+                                                var dadosValidos = string.IsNullOrEmpty(cnpjPlanilha) == false && string.IsNullOrEmpty(valorCelulaPanilha) == false;
 
                                                 if (dadosValidos)
                                                 {
                                                     //Verificar se não consta na listablacklist.
-                                                    var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == v.ToUpper().Trim());
+                                                    var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == valorCelulaPanilha.ToUpper().Trim());
 
                                                     if (existe == false)
                                                     {
-                                                        dtgeral.Rows.Add(new object[2] { cnpj, v }); //adiociona ao DataTable
+                                                        dtgeral.Rows.Add(new object[2] { cnpjPlanilha, valorCelulaPanilha }); //adiociona ao DataTable
                                                     }
 
                                                 }
@@ -199,7 +200,6 @@ namespace Excel.Class
                                             indexCells = 0;
                                         }
                                     }
-                                    RecuperarValor(lstIndices, valor);
                                 }
                             }
                         }
@@ -328,10 +328,17 @@ namespace Excel.Class
                                                 // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                                 var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
+                                                if (dadosValidos == false)
+                                                {
+                                                    continue;
+                                                }
+
 
                                                 var strategy = CreateStrategyValidações(tipo);
-                                                strategy.Execute(cnpj, dado, dtgeral, listaBlacklist, listaWordlist);
+                                                strategy.Execute(cnpj, dado, dtgeral, listaBlacklist, listaWordlist,area);
 
+
+                                                #region Substituído por Strategy
                                                 //if (dadosValidos)
                                                 //{
                                                 //    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -390,13 +397,16 @@ namespace Excel.Class
                                                 //            break;
                                                 //    }S
                                                 //    break;
-                                                //}
+                                                //} 
+                                                #endregion
                                             }
 
                                             indexCells = 0;
                                         }
                                     }
+
                                     RecuperarValor(lstIndices, dado, Etipo);
+                                    
                                 }
 
 

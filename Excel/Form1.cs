@@ -14,7 +14,7 @@ namespace Excel
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathWordList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}wordlist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = "Versão 1.0.15"; // Váriavel global para controle da versão.
+        string versao = "Versão 1.0.16"; // Váriavel global para controle da versão.
 
         List<string> listaBlacklist = new List<string>();
         List<string> listaWordList = new List<string>();
@@ -107,6 +107,7 @@ namespace Excel
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return;
             }
 
             MessageBox.Show("Informações exportadas para " + selectedFolder.ToString(),
