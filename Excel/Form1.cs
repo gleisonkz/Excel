@@ -3,6 +3,7 @@ using Excel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -14,20 +15,20 @@ namespace Excel
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathWordList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}wordlist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = "Versão 1.0.15"; // Váriavel global para controle da versão.
+        string pathEmailList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}emaillist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        string versao = $"Versão 1.0.16"; // Váriavel global para controle da versão.
 
         List<string> listaBlacklist = new List<string>();
         List<string> listaWordList = new List<string>();
+        List<string> listaEmailList = new List<string>();
 
         //=============================================================================================================================================================
 
         public Form1()
         {
             InitializeComponent();
-            label_versao.Text = versao; // atribui a versão na label.
-
-            
-        }       
+            label_versao.Text = versao; // atribui a versão na label.            
+        }
 
         //=============================================================================================================================================================
 
@@ -77,18 +78,17 @@ namespace Excel
 
         private void btnExportarClick(object sender, EventArgs e)
         {
-            
             try
             {
                 //Recebe os DataTable de cada tipo e atribui a uma variavel.
-                var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList);
-                var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList);
-                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList);
-                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList);
+                var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList, listaEmailList);
+                var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList, listaEmailList);
+                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList, listaEmailList);
+                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList, listaEmailList);
 
-                if (dtEmail.Rows.Count == 0 && dtEmailContador.Rows.Count == 0 && dtTelefone.Rows.Count== 0 && dtNuEmpregados.Rows.Count == 0)
+                if (dtEmail.Rows.Count == 0 && dtEmailContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
                 {
-                    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.","Atenção",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -149,8 +149,9 @@ namespace Excel
             {
                 CarregaArquivoParaLista(listaBlacklist, pathBlacklist);
                 CarregaArquivoParaLista(listaWordList, pathWordList);
+                CarregaArquivoParaLista(listaEmailList, pathEmailList);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }

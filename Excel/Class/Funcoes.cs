@@ -13,7 +13,6 @@ namespace Excel.Class
 {
     public class Funcoes
     {
-
         public enum EtipoValor
         {
             Email = 1,
@@ -213,11 +212,12 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
         
-        public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist)
+        public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmaillist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
 
+            var strategy = CreateStrategyValidações(Etipo, listaBlacklist, listaWordlist, listaEmaillist);
 
             if (caminho == null)
             {
@@ -325,13 +325,8 @@ namespace Excel.Class
                                                 }
                                                 indexCells++;
 
-                                                // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
-                                                var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
-
-                                                var strategy = CreateStrategyValidações(tipo);
-                                                strategy.Execute(cnpj, dado, dtgeral, listaBlacklist, listaWordlist);
-
+                                                #region ValidacaoAntiga
                                                 //if (dadosValidos)
                                                 //{
                                                 //    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -390,17 +385,23 @@ namespace Excel.Class
                                                 //            break;
                                                 //    }S
                                                 //    break;
-                                                //}
+                                                //} 
+                                                #endregion
                                             }
 
                                             indexCells = 0;
                                         }
                                     }
                                     RecuperarValor(lstIndices, dado, Etipo);
+
+                                    // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
+                                    var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
+
+                                    if (dadosValidos)
+                                    {
+                                        strategy.Execute(cnpj, dado, dtgeral);
+                                    }
                                 }
-
-
-
                             }
                         }
                     }
@@ -408,7 +409,6 @@ namespace Excel.Class
                 document.Dispose();
 
             }
-
             dtgeral = dtgeral.DefaultView.ToTable(true, columns); //Remove os valores duplicados do DataTable
             return dtgeral;
         }
@@ -429,23 +429,23 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor)
+        private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             IStrategyValidações strategy = null;
 
             switch (etipoValor)
             {              
                 case EtipoValor.Email:
-                    strategy =  new IStrategyValidaçõesTipoEmail();
+                    strategy =  new IStrategyValidaçõesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
                     break;
                 case EtipoValor.NuFuncionaros:
-                    strategy = new  IStrategyValidaçõesTipoNuEmpregados();
+                    strategy = new  IStrategyValidaçõesTipoNuEmpregados(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.Telefone:
-                    strategy = new IStrategyValidaçõesTipoTelefone();
+                    strategy = new IStrategyValidaçõesTipoTelefone(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.EmailContador:
-                    strategy = new IStrategyValidaçõesTipoEmailContador();
+                    strategy = new IStrategyValidaçõesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
                     break;
                 default:
                     break;
