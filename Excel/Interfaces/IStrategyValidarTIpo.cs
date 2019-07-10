@@ -24,18 +24,12 @@ namespace Excel.Interfaces
         private List<string> listaWordlist;
         private List<string> listaEmailList;
 
-        public IStrategyValidaçõesTipoEmail()
-        {
-
-        }
-
         public IStrategyValidaçõesTipoEmail(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
             this.listaEmailList = listaEmailList;
         }
-
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -68,7 +62,6 @@ namespace Excel.Interfaces
             this.listaWordlist = listaWordlist;
             this.listaEmailList = listaEmailList;
         }
-
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -99,7 +92,6 @@ namespace Excel.Interfaces
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
         }
-
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             {
@@ -120,7 +112,6 @@ namespace Excel.Interfaces
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
         }
-
         public void Execute(string cnpj, string valor, DataTable dataTable,  string area = "")
         {
             {

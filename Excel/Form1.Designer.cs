@@ -32,15 +32,15 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label_caminhoEscolhido = new System.Windows.Forms.Label();
-            this.btn_abrir = new System.Windows.Forms.Button();
-            this.btn_exportar = new System.Windows.Forms.Button();
+            this.BtnAbrir = new System.Windows.Forms.Button();
+            this.BtnExportar = new System.Windows.Forms.Button();
             this.label_btn_abrir = new System.Windows.Forms.Label();
             this.label_btn_exportar = new System.Windows.Forms.Label();
             this.label_versao = new System.Windows.Forms.Label();
-            this.btn_blacklist = new System.Windows.Forms.Button();
+            this.BtnBlacklist = new System.Windows.Forms.Button();
             this.label_btn_blacklist = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.btn_wordlist = new System.Windows.Forms.Button();
+            this.BtnWordlist = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,34 +73,34 @@
             this.label_caminhoEscolhido.TabIndex = 4;
             this.label_caminhoEscolhido.Text = "C:\\...";
             // 
-            // btn_abrir
+            // BtnAbrir
             // 
-            this.btn_abrir.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btn_abrir.BackgroundImage = global::Excel.Properties.Resources.Generic_Black_Folder_icon;
-            this.btn_abrir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_abrir.Location = new System.Drawing.Point(487, 338);
-            this.btn_abrir.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_abrir.Name = "btn_abrir";
-            this.btn_abrir.Size = new System.Drawing.Size(75, 66);
-            this.btn_abrir.TabIndex = 0;
-            this.btn_abrir.TabStop = false;
-            this.btn_abrir.UseVisualStyleBackColor = false;
-            this.btn_abrir.Click += new System.EventHandler(this.btnAbrirClick);
+            this.BtnAbrir.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.BtnAbrir.BackgroundImage = global::Excel.Properties.Resources.Generic_Black_Folder_icon;
+            this.BtnAbrir.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnAbrir.Location = new System.Drawing.Point(487, 338);
+            this.BtnAbrir.Margin = new System.Windows.Forms.Padding(0);
+            this.BtnAbrir.Name = "BtnAbrir";
+            this.BtnAbrir.Size = new System.Drawing.Size(75, 66);
+            this.BtnAbrir.TabIndex = 0;
+            this.BtnAbrir.TabStop = false;
+            this.BtnAbrir.UseVisualStyleBackColor = false;
+            this.BtnAbrir.Click += new System.EventHandler(this.BtnAbrirClick);
             // 
-            // btn_exportar
+            // BtnExportar
             // 
-            this.btn_exportar.BackgroundImage = global::Excel.Properties.Resources.Downloads_Black_Folder_icon;
-            this.btn_exportar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_exportar.Enabled = false;
-            this.btn_exportar.Location = new System.Drawing.Point(743, 338);
-            this.btn_exportar.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_exportar.Name = "btn_exportar";
-            this.btn_exportar.Size = new System.Drawing.Size(75, 66);
-            this.btn_exportar.TabIndex = 2;
-            this.btn_exportar.TabStop = false;
-            this.btn_exportar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btn_exportar.UseVisualStyleBackColor = false;
-            this.btn_exportar.Click += new System.EventHandler(this.btnExportarClick);
+            this.BtnExportar.BackgroundImage = global::Excel.Properties.Resources.Downloads_Black_Folder_icon;
+            this.BtnExportar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnExportar.Enabled = false;
+            this.BtnExportar.Location = new System.Drawing.Point(743, 338);
+            this.BtnExportar.Margin = new System.Windows.Forms.Padding(0);
+            this.BtnExportar.Name = "BtnExportar";
+            this.BtnExportar.Size = new System.Drawing.Size(75, 66);
+            this.BtnExportar.TabIndex = 2;
+            this.BtnExportar.TabStop = false;
+            this.BtnExportar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.BtnExportar.UseVisualStyleBackColor = false;
+            this.BtnExportar.Click += new System.EventHandler(this.BtnExportarClick);
             // 
             // label_btn_abrir
             // 
@@ -129,19 +129,19 @@
             this.label_versao.TabIndex = 7;
             this.label_versao.Text = "exibe a versão da aplicação";
             // 
-            // btn_blacklist
+            // BtnBlacklist
             // 
-            this.btn_blacklist.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btn_blacklist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
-            this.btn_blacklist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_blacklist.Location = new System.Drawing.Point(657, 338);
-            this.btn_blacklist.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_blacklist.Name = "btn_blacklist";
-            this.btn_blacklist.Size = new System.Drawing.Size(75, 66);
-            this.btn_blacklist.TabIndex = 1;
-            this.btn_blacklist.TabStop = false;
-            this.btn_blacklist.UseVisualStyleBackColor = false;
-            this.btn_blacklist.Click += new System.EventHandler(this.btnBlacklistClick);
+            this.BtnBlacklist.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.BtnBlacklist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
+            this.BtnBlacklist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnBlacklist.Location = new System.Drawing.Point(657, 338);
+            this.BtnBlacklist.Margin = new System.Windows.Forms.Padding(0);
+            this.BtnBlacklist.Name = "BtnBlacklist";
+            this.BtnBlacklist.Size = new System.Drawing.Size(75, 66);
+            this.BtnBlacklist.TabIndex = 1;
+            this.BtnBlacklist.TabStop = false;
+            this.BtnBlacklist.UseVisualStyleBackColor = false;
+            this.BtnBlacklist.Click += new System.EventHandler(this.BtnBlacklistClick);
             // 
             // label_btn_blacklist
             // 
@@ -161,19 +161,19 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "WordList";
             // 
-            // btn_wordlist
+            // BtnWordlist
             // 
-            this.btn_wordlist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
-            this.btn_wordlist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_wordlist.Location = new System.Drawing.Point(572, 338);
-            this.btn_wordlist.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_wordlist.Name = "btn_wordlist";
-            this.btn_wordlist.Size = new System.Drawing.Size(75, 66);
-            this.btn_wordlist.TabIndex = 10;
-            this.btn_wordlist.TabStop = false;
-            this.btn_wordlist.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btn_wordlist.UseVisualStyleBackColor = false;
-            this.btn_wordlist.Click += new System.EventHandler(this.btnWordlistClick);
+            this.BtnWordlist.BackgroundImage = global::Excel.Properties.Resources.Group_Black_Folder_icon;
+            this.BtnWordlist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BtnWordlist.Location = new System.Drawing.Point(572, 338);
+            this.BtnWordlist.Margin = new System.Windows.Forms.Padding(0);
+            this.BtnWordlist.Name = "BtnWordlist";
+            this.BtnWordlist.Size = new System.Drawing.Size(75, 66);
+            this.BtnWordlist.TabIndex = 10;
+            this.BtnWordlist.TabStop = false;
+            this.BtnWordlist.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.BtnWordlist.UseVisualStyleBackColor = false;
+            this.BtnWordlist.Click += new System.EventHandler(this.BtnWordlistClick);
             // 
             // Form1
             // 
@@ -182,14 +182,14 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(845, 460);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.btn_wordlist);
+            this.Controls.Add(this.BtnWordlist);
             this.Controls.Add(this.label_btn_blacklist);
-            this.Controls.Add(this.btn_blacklist);
+            this.Controls.Add(this.BtnBlacklist);
             this.Controls.Add(this.label_versao);
             this.Controls.Add(this.label_btn_exportar);
             this.Controls.Add(this.label_btn_abrir);
-            this.Controls.Add(this.btn_abrir);
-            this.Controls.Add(this.btn_exportar);
+            this.Controls.Add(this.BtnAbrir);
+            this.Controls.Add(this.BtnExportar);
             this.Controls.Add(this.label_caminhoEscolhido);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
@@ -208,18 +208,18 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_exportar;
+        private System.Windows.Forms.Button BtnExportar;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button btn_abrir;
+        private System.Windows.Forms.Button BtnAbrir;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_caminhoEscolhido;
         private System.Windows.Forms.Label label_btn_abrir;
         private System.Windows.Forms.Label label_btn_exportar;
         private System.Windows.Forms.Label label_versao;
-        private System.Windows.Forms.Button btn_blacklist;
+        private System.Windows.Forms.Button BtnBlacklist;
         private System.Windows.Forms.Label label_btn_blacklist;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btn_wordlist;
+        private System.Windows.Forms.Button BtnWordlist;
     }
 }
 

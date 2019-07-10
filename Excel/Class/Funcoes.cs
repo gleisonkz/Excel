@@ -58,6 +58,9 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
+        ///<summary>
+        ///Recupera informações de uma planilha para preencher o DataTable.
+        ///</summary>
         public DataTable PreencheDataTableOpenXML(string caminho, List<string> listaBlacklist, List<string> listaWordlist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
@@ -211,7 +214,10 @@ namespace Excel.Class
         }
 
         //=============================================================================================================================================================
-        
+
+        ///<summary>
+        ///Recupera informações de uma planilha para preencher o DataTable de acordo com o tipo valor informado.
+        ///</summary>
         public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmaillist)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
@@ -252,6 +258,7 @@ namespace Excel.Class
 
                 // Cria uma lista para que sejam armazenados os índices.
                 var lstIndices = new List<int>();
+                var IndiceCNPJCPF = 0 ;
 
 
                 foreach (WorksheetPart worksheetPart in document.WorkbookPart.WorksheetParts)
@@ -275,6 +282,11 @@ namespace Excel.Class
                                             lstIndices.Add(indexCells); //Adiciona a lista de índices
                                         }
 
+                                        if (str.ToUpper().Contains("CPF") || str.ToUpper().Contains("CNPJ"))
+                                        {
+                                            IndiceCNPJCPF = indexCells;
+                                        }
+
                                         indexCells++;
                                     }
                                     firstRow = false;
@@ -288,7 +300,7 @@ namespace Excel.Class
                                     string dado = null;
                                     string area = null;
 
-                                    void RecuperarValor(List<int> lista, string valor, EtipoValor tipo)
+                                    void RecuperarValor(List<int> lista, int indiceCNPJ, string valor, EtipoValor tipo)
                                     {
                                         int indexCells = 0;
 
@@ -301,7 +313,7 @@ namespace Excel.Class
                                                 try
                                                 {
                                                     //CNPJ
-                                                    if (indexCells == 3)
+                                                    if (indexCells == indiceCNPJ)
                                                     {
                                                         cnpj = cell.InnerText.ToString();
                                                     }
@@ -324,75 +336,12 @@ namespace Excel.Class
                                                     throw ex;
                                                 }
                                                 indexCells++;
-
-
-                                                #region ValidacaoAntiga
-                                                //if (dadosValidos)
-                                                //{
-                                                //    bool contemCONT = listaWordlist.Any(c => dado.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
-
-                                                //    switch (Etipo)
-                                                //    {
-                                                //        case EtipoValor.Email:
-
-                                                //            if (contemCONT == false) //Verificar se o e-mail não contém nenhuma das palavras definidas na wordlist.
-                                                //            {
-                                                //                //Verificar se o e-mail consta na blacklist
-                                                //                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
-
-                                                //                if (!existe)
-                                                //                {
-                                                //                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                //                }
-                                                //            }
-                                                //            break;
-
-                                                //        case EtipoValor.NuFuncionaros:
-
-                                                //            if (area == "ÁREA EMPRESÁRIO" && dado == "0")
-                                                //            {
-                                                //                continue;
-                                                //            }
-                                                //            else
-                                                //            {
-                                                //                dtgeral.Rows.Add(new object[2] { cnpj, dado });
-                                                //            }
-
-                                                //            break;
-
-                                                //        case EtipoValor.Telefone:
-
-                                                //            dtgeral.Rows.Add(new object[2] { cnpj, dado });
-
-                                                //            break;
-
-                                                //        case EtipoValor.EmailContador:
-
-                                                //            if (contemCONT == true) //Verificar se o e-mail não contém "CONT"
-                                                //            {
-                                                //                //Verificar se o e-mail consta na blacklist
-                                                //                var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == dado.ToUpper().Trim());
-
-                                                //                if (!existe)
-                                                //                {
-                                                //                    dtgeral.Rows.Add(new object[2] { cnpj, dado }); //adiociona ao DataTable
-                                                //                }
-                                                //            }
-
-                                                //            break;
-                                                //        default:
-                                                //            MessageBox.Show($"Erro ao informar o tipo de valor a ser verificado");
-                                                //            break;
-                                                //    }S
-                                                //    break;
-                                                //} 
-                                                #endregion
                                             }
 
                                             indexCells = 0;
                                         }
                                     }
-                                    RecuperarValor(lstIndices, dado, Etipo);
+                                    RecuperarValor(lstIndices, IndiceCNPJCPF, dado, Etipo);
 
                                     // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                     var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
@@ -415,6 +364,9 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
+        ///<summary>
+        ///Escreve as informações contidas no DataTable em um arquivo.
+        ///</summary>
         public void Write(DataTable dt, string outputFilePath)
         {
             using (StreamWriter sw = new StreamWriter(outputFilePath, false))

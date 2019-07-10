@@ -75,7 +75,7 @@ namespace Excel
 
         //=============================================================================================================================================================
 
-        private void btnExportarClick(object sender, EventArgs e)
+        private void BtnExportarClick(object sender, EventArgs e)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Excel
                 var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList, listaEmailList);
                 var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList, listaEmailList);
                 var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList, listaEmailList);
-                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList, listaEmailList);
+                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList, listaEmailList);                
 
                 if (dtEmail.Rows.Count == 0 && dtEmailContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
                 {
@@ -114,7 +114,7 @@ namespace Excel
 
         //=============================================================================================================================================================
 
-        private void btnAbrirClick(object sender, EventArgs e)
+        private void BtnAbrirClick(object sender, EventArgs e)
         {
             FolderBrowserDialog Abrir = new FolderBrowserDialog(); //Instanciação da classe para abrir caixa de dialogo.
             Abrir.RootFolder = Environment.SpecialFolder.Desktop; //Defini o local padrão onde será aberto a caixa de dialogo.
@@ -135,8 +135,8 @@ namespace Excel
                 return;
             }
 
-            btn_exportar.Enabled = true; //Habilita o botão de exportar.
-            btn_exportar.Focus(); //Move o tabindex para o botão exportar.
+            BtnExportar.Enabled = true; //Habilita o botão de exportar.
+            BtnExportar.Focus(); //Move o tabindex para o botão exportar.
             dataGridView1.DataSource = dtgeral; //Adiciona os valores do DataTable ao Grid.
         }
 
@@ -158,7 +158,7 @@ namespace Excel
 
         //=============================================================================================================================================================
 
-        private void btnBlacklistClick(object sender, EventArgs e)
+        private void BtnBlacklistClick(object sender, EventArgs e)
         {
             try
             {
@@ -174,7 +174,7 @@ namespace Excel
 
         //=============================================================================================================================================================
 
-        private void btnWordlistClick(object sender, EventArgs e)
+        private void BtnWordlistClick(object sender, EventArgs e)
         {
             try
             {
