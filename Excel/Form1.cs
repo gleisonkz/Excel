@@ -21,6 +21,8 @@ namespace Excel
         List<string> listaWordList = new List<string>();
         List<string> listaEmailList = new List<string>();
 
+        
+
         //=============================================================================================================================================================
 
         public Form1()

@@ -18,18 +18,19 @@ namespace Excel.Interfaces
 
     //=============================================================================================================================================================
 
-    public class IStrategyValidaçõesTipoEmail : IStrategyValidações
+    public class StrategyValidaçõesTipoEmail : IStrategyValidações
     {
         private List<string> listaBlacklist;
         private List<string> listaWordlist;
         private List<string> listaEmailList;
 
-        public IStrategyValidaçõesTipoEmail(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
+        public StrategyValidaçõesTipoEmail(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
             this.listaEmailList = listaEmailList;
         }
+
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -50,18 +51,19 @@ namespace Excel.Interfaces
 
     //=============================================================================================================================================================
 
-    public class IStrategyValidaçõesTipoEmailContador : IStrategyValidações
+    public class StrategyValidaçõesTipoEmailContador : IStrategyValidações
     {
         private readonly List<string> listaBlacklist;
         private readonly List<string> listaWordlist;
         private readonly List<string> listaEmailList;
 
-        public IStrategyValidaçõesTipoEmailContador(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
+        public StrategyValidaçõesTipoEmailContador(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
             this.listaEmailList = listaEmailList;
         }
+
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             bool contemCONT = listaWordlist.Any(c => valor.Contains(c)); //Verifica se possui alguma palavra da lista de palavras.
@@ -70,7 +72,7 @@ namespace Excel.Interfaces
             {
                 //Verificar se o e-mail consta na blacklist
                 var existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
-                var existeNaEmaillist = listaEmailList.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+                var existeNaEmaillist = listaEmailList.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());                
 
                 if (existeNaBlacklist == false && existeNaEmaillist == false)
                 {
@@ -82,16 +84,17 @@ namespace Excel.Interfaces
 
     //=============================================================================================================================================================
 
-    public class IStrategyValidaçõesTipoTelefone : IStrategyValidações
+    public class StrategyValidaçõesTipoTelefone : IStrategyValidações
     {
         private readonly List<string> listaBlacklist;
         private readonly List<string> listaWordlist;
 
-        public IStrategyValidaçõesTipoTelefone(List<string> listaBlacklist, List<string> listaWordlist)
+        public StrategyValidaçõesTipoTelefone(List<string> listaBlacklist, List<string> listaWordlist)
         {
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
         }
+
         public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
         {
             {
@@ -102,29 +105,29 @@ namespace Excel.Interfaces
 
     //=============================================================================================================================================================
 
-    public class IStrategyValidaçõesTipoNuEmpregados : IStrategyValidações
+    public class StrategyValidaçõesTipoNuEmpregados : IStrategyValidações
     {
         private readonly List<string> listaBlacklist;
         private readonly List<string> listaWordlist;
 
-        public IStrategyValidaçõesTipoNuEmpregados(List<string> listaBlacklist, List<string> listaWordlist)
+        public StrategyValidaçõesTipoNuEmpregados(List<string> listaBlacklist, List<string> listaWordlist)
         {
             this.listaBlacklist = listaBlacklist;
             this.listaWordlist = listaWordlist;
         }
+
         public void Execute(string cnpj, string valor, DataTable dataTable,  string area = "")
         {
+            
+            if (area.ToUpper() == "ÁREA EMPRESÁRIO" && valor == "0")
             {
-
-                if (area == "ÁREA EMPRESÁRIO" && valor == "0")
-                {
                     
-                }
-                else
-                {
-                    dataTable.Rows.Add(new object[2] { cnpj, valor });
-                }
             }
+            else
+            {
+                dataTable.Rows.Add(new object[2] { cnpj, valor });
+            }
+            
         }
     }
 

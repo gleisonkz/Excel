@@ -39,10 +39,10 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        public Funcoes(IStrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail,
-                       IStrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador,
-                       IStrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone,
-                       IStrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados
+        public Funcoes(StrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail,
+                       StrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador,
+                       StrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone,
+                       StrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados
                        )
         {
             this.strategyValidaçõesTipoEmail = strategyValidaçõesTipoEmail;
@@ -51,10 +51,10 @@ namespace Excel.Class
             this.strategyValidaçõesTipoNuEmpregados = strategyValidaçõesTipoNuEmpregados;
         }
 
-        private readonly IStrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail;
-        private readonly IStrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador;
-        private readonly IStrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone;
-        private readonly IStrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados;
+        private readonly StrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail;
+        private readonly StrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador;
+        private readonly StrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone;
+        private readonly StrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados;
 
         //=============================================================================================================================================================
 
@@ -211,6 +211,7 @@ namespace Excel.Class
             }
             dtgeral = dtgeral.DefaultView.ToTable(true, columns); //Remove os valores duplicados do DataTable
             return dtgeral;
+            
         }
 
         //=============================================================================================================================================================
@@ -282,7 +283,7 @@ namespace Excel.Class
                                             lstIndices.Add(indexCells); //Adiciona a lista de índices
                                         }
 
-                                        if (str.ToUpper().Contains("CPF") || str.ToUpper().Contains("CNPJ"))
+                                        if (str.ToUpper().Contains("CNPJ"))
                                         {
                                             IndiceCNPJCPF = indexCells;
                                         }
@@ -321,7 +322,10 @@ namespace Excel.Class
                                                     //VALOR
                                                     if (item == indexCells)
                                                     {
-                                                        dado = cell.InnerText.ToString();
+                                                        if (cell.InnerText != "")
+                                                        {
+                                                            dado = cell.InnerText.ToString();
+                                                        }                                                      
 
                                                     }
                                                     //AREA
@@ -339,17 +343,21 @@ namespace Excel.Class
                                             }
 
                                             indexCells = 0;
+
+                                            // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
+                                            var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
+
+                                            if (dadosValidos)
+                                            {
+                                                strategy.Execute(cnpj, dado, dtgeral, area);
+                                            }
                                         }
+
+
                                     }
                                     RecuperarValor(lstIndices, IndiceCNPJCPF, dado, Etipo);
 
-                                    // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
-                                    var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
-                                    if (dadosValidos)
-                                    {
-                                        strategy.Execute(cnpj, dado, dtgeral);
-                                    }
                                 }
                             }
                         }
@@ -388,16 +396,16 @@ namespace Excel.Class
             switch (etipoValor)
             {              
                 case EtipoValor.Email:
-                    strategy =  new IStrategyValidaçõesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
+                    strategy =  new StrategyValidaçõesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
                     break;
                 case EtipoValor.NuFuncionaros:
-                    strategy = new  IStrategyValidaçõesTipoNuEmpregados(listaBlacklist, listaWordlist);
+                    strategy = new  StrategyValidaçõesTipoNuEmpregados(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.Telefone:
-                    strategy = new IStrategyValidaçõesTipoTelefone(listaBlacklist, listaWordlist);
+                    strategy = new StrategyValidaçõesTipoTelefone(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.EmailContador:
-                    strategy = new IStrategyValidaçõesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
+                    strategy = new StrategyValidaçõesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
                     break;
                 default:
                     break;
