@@ -83,7 +83,7 @@ namespace TesteExcel
         [TestMethod]
         public void TesteEmailNaoEncontradoWordList()
         {
-            var strategy = new IStrategyValidaçõesTipoEmailContador(new List<string>(), new List<string> { "teste@feomerciomg.org.br" }, new List<string>());
+            var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "teste@feomerciomg.org.br" }, new List<string>());
 
             DataTable dtgeral = new DataTable();
             var columns = new[] { "CNPJ", "VALOR", };
@@ -97,7 +97,7 @@ namespace TesteExcel
         [TestMethod]
         public void TesteEmailEncontradoWordListSemBlacklist()
         {
-            var strategy = new IStrategyValidaçõesTipoEmailContador(new List<string>(), new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
+            var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
 
             DataTable dtgeral = new DataTable();
             var columns = new[] { "CNPJ", "VALOR", };
@@ -111,7 +111,7 @@ namespace TesteExcel
         [TestMethod]
         public void TesteEmailEncontradoWordListComBlacklist()
         {
-            var strategy = new IStrategyValidaçõesTipoEmailContador(new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
+            var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
 
             DataTable dtgeral = new DataTable();
             var columns = new[] { "CNPJ", "VALOR", };
@@ -124,7 +124,7 @@ namespace TesteExcel
         [TestMethod]
         public void TesteEmailEncontradoWordListSemBlacklistComEmailList()
         {
-            var strategy = new IStrategyValidaçõesTipoEmailContador(new List<string> { "teste@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" });
+            var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "teste@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" });
 
             DataTable dtgeral = new DataTable();
             var columns = new[] { "CNPJ", "VALOR", };

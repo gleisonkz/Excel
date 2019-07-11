@@ -18,7 +18,8 @@ namespace Excel.Class
             Email = 1,
             NuFuncionaros = 2,
             Telefone = 3,
-            EmailContador = 4
+            EmailContador = 4,
+            EmailNaoClassificado = 5
         }
 
         //=============================================================================================================================================================
@@ -28,7 +29,8 @@ namespace Excel.Class
             { EtipoValor.Email, new [] { "EMAIL" } },
             { EtipoValor.Telefone, new [] { "TELEFONE" } },
             { EtipoValor.EmailContador, new [] { "EMAIL" } },
-            { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } }
+            { EtipoValor.NuFuncionaros, new [] { "FUNCIONARIOS","EMPREGADOS" } },
+            { EtipoValor.EmailNaoClassificado, new [] { "EMAIL" } }
         };
 
         //=============================================================================================================================================================
@@ -39,22 +41,25 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        public Funcoes(StrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail,
-                       StrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador,
-                       StrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone,
-                       StrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados
+        public Funcoes(StrategyValidacoesTipoEmail strategyValidacoesTipoEmail,
+                       StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador,
+                       StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone,
+                       StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados,
+                       StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado
                        )
         {
-            this.strategyValidaçõesTipoEmail = strategyValidaçõesTipoEmail;
-            this.strategyValidaçõesTipoEmailContador = strategyValidaçõesTipoEmailContador;
-            this.strategyValidaçõesTipoTelefone = strategyValidaçõesTipoTelefone;
-            this.strategyValidaçõesTipoNuEmpregados = strategyValidaçõesTipoNuEmpregados;
+            this.strategyValidacoesTipoEmail = strategyValidacoesTipoEmail;
+            this.strategyValidacoesTipoEmailContador = strategyValidacoesTipoEmailContador;
+            this.strategyValidacoesTipoTelefone = strategyValidacoesTipoTelefone;
+            this.strategyValidacoesTipoNuEmpregados = strategyValidacoesTipoNuEmpregados;
+            this.strategyValidacoesTipoEmailNaoClassificado = strategyValidacoesTipoEmailNaoClassificado;
         }
 
-        private readonly StrategyValidaçõesTipoEmail strategyValidaçõesTipoEmail;
-        private readonly StrategyValidaçõesTipoEmailContador strategyValidaçõesTipoEmailContador;
-        private readonly StrategyValidaçõesTipoTelefone strategyValidaçõesTipoTelefone;
-        private readonly StrategyValidaçõesTipoNuEmpregados strategyValidaçõesTipoNuEmpregados;
+        private readonly StrategyValidacoesTipoEmail strategyValidacoesTipoEmail;
+        private readonly StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador;
+        private readonly StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone;
+        private readonly StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados;
+        private readonly StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado;
 
         //=============================================================================================================================================================
 
@@ -359,6 +364,8 @@ namespace Excel.Class
 
 
                                 }
+
+
                             }
                         }
                     }
@@ -389,6 +396,9 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
+        ///<summary>
+        ///Cria a estratégia de validações acordo com tipo informado.
+        ///</summary>
         private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             IStrategyValidações strategy = null;
@@ -396,16 +406,19 @@ namespace Excel.Class
             switch (etipoValor)
             {              
                 case EtipoValor.Email:
-                    strategy =  new StrategyValidaçõesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
+                    strategy =  new StrategyValidacoesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
                     break;
                 case EtipoValor.NuFuncionaros:
-                    strategy = new  StrategyValidaçõesTipoNuEmpregados(listaBlacklist, listaWordlist);
+                    strategy = new  StrategyValidacoesTipoNuEmpregados(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.Telefone:
-                    strategy = new StrategyValidaçõesTipoTelefone(listaBlacklist, listaWordlist);
+                    strategy = new StrategyValidacoesTipoTelefone(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.EmailContador:
-                    strategy = new StrategyValidaçõesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
+                    strategy = new StrategyValidacoesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
+                    break;
+                case EtipoValor.EmailNaoClassificado:
+                    strategy = new StrategyValidacoesTipoEmailNaoClassificado(listaBlacklist, listaWordlist, listaEmailList);
                     break;
                 default:
                     break;

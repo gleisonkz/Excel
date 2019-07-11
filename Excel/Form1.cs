@@ -14,12 +14,12 @@ namespace Excel
         Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string pathWordList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}wordlist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string pathEmailList = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}emaillist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = $"Versão 1.0.16"; // Váriavel global para controle da versão.    
+        string pathlistaTipoEmailContador = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailContador.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        string pathlistaTipoEmailEmpresa = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailEmpresa.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
+        string versao = $"Versão 1.0.17"; // Váriavel global para controle da versão.    
         List<string> listaBlacklist = new List<string>();
-        List<string> listaWordList = new List<string>();
-        List<string> listaEmailList = new List<string>();
+        List<string> listaTipoEmailContador = new List<string>();
+        List<string> listaTipoEmailEmpresa = new List<string>();
 
         
 
@@ -82,28 +82,32 @@ namespace Excel
             try
             {
                 //Recebe os DataTable de cada tipo e atribui a uma variavel.
-                var dtEmail = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaWordList, listaEmailList);
-                var dtEmailContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaWordList, listaEmailList);
-                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaWordList, listaEmailList);
-                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaWordList, listaEmailList);                
+                var dtEmailTipoEmpresa = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
+                var dtEmailTipoContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
+                var dtEmailTipoNaoClassificado = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailNaoClassificado, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
+                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
+                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);                
 
-                if (dtEmail.Rows.Count == 0 && dtEmailContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
+                if (dtEmailTipoEmpresa.Rows.Count == 0 && dtEmailTipoContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
                 {
                     MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
                 //Cria os endereço e nomes dos arquivos que serão salvos.
-                string caminhoTxtEmail = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmail.Rows.Count}.txt");
-                string caminhoTxtEmailContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailContador.Rows.Count}.txt");
+                string caminhoTxtEmailTipoEmpresa = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmailTipoEmpresa.Rows.Count}.txt");
+                string caminhoTxtEmailTipoContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailTipoContador.Rows.Count}.txt");
+                string caminhoTxtEmailNaoClassificado = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-NÃO_CLASSIFICADO - Qtd {dtEmailTipoNaoClassificado.Rows.Count}.txt");
                 string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES - Qtd {dtTelefone.Rows.Count}.txt");
                 string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados - Qtd {dtNuEmpregados.Rows.Count}.txt");
 
                 //Faz a criação dos arquivos de texto e inserção dos dados.
-                objFuncoes.Write(dtEmail, caminhoTxtEmail);
-                objFuncoes.Write(dtEmailContador, caminhoTxtEmailContador);
+                objFuncoes.Write(dtEmailTipoEmpresa, caminhoTxtEmailTipoEmpresa);
+                objFuncoes.Write(dtEmailTipoContador, caminhoTxtEmailTipoContador);
                 objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
                 objFuncoes.Write(dtNuEmpregados, caminhoTxtNuEmpregados);
+                objFuncoes.Write(dtEmailTipoNaoClassificado, caminhoTxtEmailNaoClassificado);
+
             }
             catch (Exception ex)
             {
@@ -129,7 +133,7 @@ namespace Excel
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
 
-            var dtgeral = objFuncoes.PreencheDataTableOpenXML(selectedFolder, listaBlacklist, listaWordList); //Chama o metodo responsável por preencher o DataTable.
+            var dtgeral = objFuncoes.PreencheDataTableOpenXML(selectedFolder, listaBlacklist, listaTipoEmailContador); //Chama o metodo responsável por preencher o DataTable.
 
             if (dtgeral.Rows.Count == 0 || dtgeral == null)
             {
@@ -149,8 +153,8 @@ namespace Excel
             try
             {
                 CarregaArquivoParaLista(listaBlacklist, pathBlacklist);
-                CarregaArquivoParaLista(listaWordList, pathWordList);
-                CarregaArquivoParaLista(listaEmailList, pathEmailList);
+                CarregaArquivoParaLista(listaTipoEmailContador, pathlistaTipoEmailContador);
+                CarregaArquivoParaLista(listaTipoEmailEmpresa, pathlistaTipoEmailEmpresa);
             }
             catch (Exception ex)
             {
@@ -176,13 +180,29 @@ namespace Excel
 
         //=============================================================================================================================================================
 
-        private void BtnWordlistClick(object sender, EventArgs e)
+        private void BtnListaTipoEmailContadorClick(object sender, EventArgs e)
         {
             try
             {
-                var n = new Form_Blacklist_Wordlist(listaWordList, objFuncoes, 2);
+                var n = new Form_Blacklist_Wordlist(listaTipoEmailContador, objFuncoes, 2);
                 n.ShowDialog();
-                GravarListaNoArquivo(listaWordList, pathWordList);
+                GravarListaNoArquivo(listaTipoEmailContador, pathlistaTipoEmailContador);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        //=============================================================================================================================================================
+
+        private void BtnListaTipoEmailEmpresaClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var n = new Form_Blacklist_Wordlist(listaTipoEmailEmpresa, objFuncoes, 3);
+                n.ShowDialog();
+                GravarListaNoArquivo(listaTipoEmailEmpresa, pathlistaTipoEmailEmpresa);
             }
             catch (Exception ex)
             {

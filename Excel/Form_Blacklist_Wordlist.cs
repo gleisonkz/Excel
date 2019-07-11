@@ -11,7 +11,7 @@ namespace Excel
         private readonly Funcoes objFuncoes;
 
         public bool Editando { get; set; }
-        public int tipo { get; set; }
+        public int Tipo { get; set; }
 
         //public Form_Blacklist()
         //{
@@ -23,25 +23,32 @@ namespace Excel
             InitializeComponent();
             this.listaBlacklist = listaBlacklist;
             this.objFuncoes = objFuncoes;
-            this.tipo = tipo;
+            this.Tipo = tipo;
         }
 
         private void Form_Blacklist_Load(object sender, EventArgs e)
         {
             AtualizarListBox();
 
-            if (tipo == 1)
+            if (Tipo == 1)
             {
                 label_itens.Text = $"Lista de emails registrados:";
                 label_textbox.Text = $"Email:";
                 this.Text = "Blacklist - Inserir/Editar";
             }
 
-            if (tipo == 2)
+            if (Tipo == 2)
             {
-                label_itens.Text = $"Lista de palavras registradas:";
+                label_itens.Text = $"Lista de emails/palavras registradas:";
                 label_textbox.Text = $"Palavra:";
-                this.Text = "Wordlist - Inserir/Editar";
+                this.Text = "ListaTipoContador - Inserir/Editar";
+            }
+
+            if (Tipo == 3)
+            {
+                label_itens.Text = $"Lista de emails registrados:";
+                label_textbox.Text = $"Email:";
+                this.Text = "ListaTipoEmpresa - Inserir/Editar";
             }
         } 
 
