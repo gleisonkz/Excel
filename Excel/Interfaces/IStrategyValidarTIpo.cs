@@ -13,39 +13,47 @@ namespace Excel.Interfaces
 
     public interface IStrategyValidações
     {
-        void Execute(string cnpj, string valor, DataTable dataTable, string area = "");
+        void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string,string>> listaPendencias, string area = "");
     }
 
     //=============================================================================================================================================================
 
-    public class StrategyValidacoesTipoEmail : IStrategyValidações
+    public class StrategyValidacoesTipoEmailEmpresa : IStrategyValidações
     {
-        private List<string> listaBlacklist;
-        private List<string> listaWordlist;
-        private List<string> listaEmailList;
+        private readonly List<string> listaBlacklist;
+        private readonly List<string> listaTipoEmailContador;
+        private readonly List<string> listaTipoEmailEmpresa;
+        private readonly List<Tuple<string, string>> listaPendencias;
 
-        public StrategyValidacoesTipoEmail(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
+        public StrategyValidacoesTipoEmailEmpresa(List<string> listaBlacklist, List<string> listaTipoEmailContador, List<string> listaTipoEmailEmpresa, List<Tuple<string, string>> listaPendencias)
         {
             this.listaBlacklist = listaBlacklist;
-            this.listaWordlist = listaWordlist;
-            this.listaEmailList = listaEmailList;
+            this.listaTipoEmailContador = listaTipoEmailContador;
+            this.listaTipoEmailEmpresa = listaTipoEmailEmpresa;
+            this.listaPendencias = listaPendencias;
         }
 
-        public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
             //Verifica se o e-mail consta na blacklist
             bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na emaillist
-            bool existeNaEmaillist = listaEmailList.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na wordlist
-            bool existeNaWordlist = listaWordlist.Any(c => valor.Contains(c));
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c));
 
 
-            if (existeNaWordlist == false && existeNaBlacklist == false && existeNaEmaillist == true)
+            if (existeNalistaTipoEmailContador == false && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == true)
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
+            }
+
+            if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
+            {
+                var item = new Tuple<string, string>( cnpj, valor + '\t' + "Registro existente nas duas listas de classificações" );
+                listaPendencias.Add(item);
             }
         }
     }
@@ -55,32 +63,40 @@ namespace Excel.Interfaces
     public class StrategyValidacoesTipoEmailContador : IStrategyValidações
     {
         private readonly List<string> listaBlacklist;
-        private readonly List<string> listaWordlist;
-        private readonly List<string> listaEmailList;
+        private readonly List<string> listaTipoEmailContador;
+        private readonly List<string> listaTipoEmailEmpresa;
+        private readonly List<Tuple<string, string>> listaPendencias;
 
-        public StrategyValidacoesTipoEmailContador(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
+        public StrategyValidacoesTipoEmailContador(List<string> listaBlacklist, List<string> listaTipoEmailContador, List<string> listaTipoEmailEmpresa, List<Tuple<string, string>> listaPendencias)
         {
             this.listaBlacklist = listaBlacklist;
-            this.listaWordlist = listaWordlist;
-            this.listaEmailList = listaEmailList;
+            this.listaTipoEmailContador = listaTipoEmailContador;
+            this.listaTipoEmailEmpresa = listaTipoEmailEmpresa;
+            this.listaPendencias = listaPendencias;
         }
 
-        public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
             //Verifica se o e-mail consta na blacklist
             bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na emaillist
-            bool existeNaEmaillist = listaEmailList.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na wordlist
-            bool existeNaWordlist = listaWordlist.Any(c => valor.Contains(c)); 
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c)); 
 
 
-            if (existeNaWordlist == true && existeNaBlacklist == false && existeNaEmaillist == false)
+            if (existeNalistaTipoEmailContador == true && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == false)
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
             }
+
+            //if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
+            //{
+            //    var item = new Tuple<string, string>(cnpj, valor);
+            //    listaPendencias.Add(item);
+            //}
         }
     }
 
@@ -99,7 +115,7 @@ namespace Excel.Interfaces
             this.listaEmailList = listaEmailList;
         }
 
-        public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
             //Verifica se o e-mail consta na blacklist
             bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
@@ -131,7 +147,7 @@ namespace Excel.Interfaces
             this.listaWordlist = listaWordlist;
         }
 
-        public void Execute(string cnpj, string valor, DataTable dataTable, string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor });
@@ -152,7 +168,7 @@ namespace Excel.Interfaces
             this.listaWordlist = listaWordlist;
         }
 
-        public void Execute(string cnpj, string valor, DataTable dataTable,  string area = "")
+        public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
             
             if (area.ToUpper() == "ÁREA EMPRESÁRIO" && valor == "0")

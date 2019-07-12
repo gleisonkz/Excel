@@ -20,8 +20,7 @@ namespace Excel
         List<string> listaBlacklist = new List<string>();
         List<string> listaTipoEmailContador = new List<string>();
         List<string> listaTipoEmailEmpresa = new List<string>();
-
-        
+        List<Tuple<string, string>> listaPendencias = new List<Tuple<string,string>>();
 
         //=============================================================================================================================================================
 
@@ -82,17 +81,17 @@ namespace Excel
             try
             {
                 //Recebe os DataTable de cada tipo e atribui a uma variavel.
-                var dtEmailTipoEmpresa = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
-                var dtEmailTipoContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
-                var dtEmailTipoNaoClassificado = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailNaoClassificado, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
-                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);
-                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa);                
+                var dtEmailTipoEmpresa = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa, listaPendencias);
+                var dtEmailTipoContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa, listaPendencias);
+                var dtEmailTipoNaoClassificado = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailNaoClassificado, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa, listaPendencias);
+                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa, listaPendencias);
+                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, listaBlacklist, listaTipoEmailContador, listaTipoEmailEmpresa, listaPendencias);
 
-                if (dtEmailTipoEmpresa.Rows.Count == 0 && dtEmailTipoContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
-                {
-                    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                //if (dtEmailTipoEmpresa.Rows.Count == 0 && dtEmailTipoContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
+                //{
+                //    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    return;
+                //}
 
                 //Cria os endereço e nomes dos arquivos que serão salvos.
                 string caminhoTxtEmailTipoEmpresa = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmailTipoEmpresa.Rows.Count}.txt");
@@ -100,6 +99,9 @@ namespace Excel
                 string caminhoTxtEmailNaoClassificado = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-NÃO_CLASSIFICADO - Qtd {dtEmailTipoNaoClassificado.Rows.Count}.txt");
                 string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES - Qtd {dtTelefone.Rows.Count}.txt");
                 string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados - Qtd {dtNuEmpregados.Rows.Count}.txt");
+                string caminhoTxtPendencias = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_Pendencias - Qtd {listaPendencias.Count}.txt");
+
+                
 
                 //Faz a criação dos arquivos de texto e inserção dos dados.
                 objFuncoes.Write(dtEmailTipoEmpresa, caminhoTxtEmailTipoEmpresa);
@@ -107,6 +109,12 @@ namespace Excel
                 objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
                 objFuncoes.Write(dtNuEmpregados, caminhoTxtNuEmpregados);
                 objFuncoes.Write(dtEmailTipoNaoClassificado, caminhoTxtEmailNaoClassificado);
+
+                if (listaPendencias.Count > 0)
+                {
+                    var dtPendencias = listaPendencias.ToDataTable();
+                    objFuncoes.Write(dtPendencias, caminhoTxtPendencias);
+                }
 
             }
             catch (Exception ex)

@@ -41,11 +41,12 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        public Funcoes(StrategyValidacoesTipoEmail strategyValidacoesTipoEmail,
+        public Funcoes(StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail,
                        StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador,
                        StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone,
                        StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados,
-                       StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado
+                       StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado,
+                       List<Tuple<string, string>> listaPendencias
                        )
         {
             this.strategyValidacoesTipoEmail = strategyValidacoesTipoEmail;
@@ -53,13 +54,15 @@ namespace Excel.Class
             this.strategyValidacoesTipoTelefone = strategyValidacoesTipoTelefone;
             this.strategyValidacoesTipoNuEmpregados = strategyValidacoesTipoNuEmpregados;
             this.strategyValidacoesTipoEmailNaoClassificado = strategyValidacoesTipoEmailNaoClassificado;
+            this.listaPendencias = listaPendencias;
         }
 
-        private readonly StrategyValidacoesTipoEmail strategyValidacoesTipoEmail;
+        private readonly StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail;
         private readonly StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador;
         private readonly StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone;
         private readonly StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados;
         private readonly StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado;
+        private readonly List<Tuple<string, string>> listaPendencias;
 
         //=============================================================================================================================================================
 
@@ -224,7 +227,7 @@ namespace Excel.Class
         ///<summary>
         ///Recupera informações de uma planilha para preencher o DataTable de acordo com o tipo valor informado.
         ///</summary>
-        public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmaillist)
+        public DataTable PreencheDataTableOpenXML(string caminho, EtipoValor Etipo, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmaillist, List<Tuple<string,string>> listaPendencias)
         {
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
@@ -354,7 +357,7 @@ namespace Excel.Class
 
                                             if (dadosValidos)
                                             {
-                                                strategy.Execute(cnpj, dado, dtgeral, area);
+                                                strategy.Execute(cnpj, dado, dtgeral, listaPendencias, area);
                                             }
                                         }
 
@@ -406,7 +409,7 @@ namespace Excel.Class
             switch (etipoValor)
             {              
                 case EtipoValor.Email:
-                    strategy =  new StrategyValidacoesTipoEmail(listaBlacklist,listaWordlist,listaEmailList);
+                    strategy =  new StrategyValidacoesTipoEmailEmpresa(listaBlacklist,listaWordlist,listaEmailList, listaPendencias);
                     break;
                 case EtipoValor.NuFuncionaros:
                     strategy = new  StrategyValidacoesTipoNuEmpregados(listaBlacklist, listaWordlist);
@@ -415,7 +418,7 @@ namespace Excel.Class
                     strategy = new StrategyValidacoesTipoTelefone(listaBlacklist, listaWordlist);
                     break;
                 case EtipoValor.EmailContador:
-                    strategy = new StrategyValidacoesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList);
+                    strategy = new StrategyValidacoesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList, listaPendencias);
                     break;
                 case EtipoValor.EmailNaoClassificado:
                     strategy = new StrategyValidacoesTipoEmailNaoClassificado(listaBlacklist, listaWordlist, listaEmailList);
