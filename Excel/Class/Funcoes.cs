@@ -71,6 +71,9 @@ namespace Excel.Class
         ///</summary>
         public DataTable PreencheDataTableOpenXML(string caminho, List<string> listaBlacklist, List<string> listaWordlist)
         {
+
+
+
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
 
@@ -112,6 +115,7 @@ namespace Excel.Class
 
                 // Cria uma lista para que sejam armazenados os índices.
                 var lstIndices = new List<int>();
+                var IndiceCNPJCPF = 0;
 
                 foreach (WorksheetPart worksheetPart in document.WorkbookPart.WorksheetParts)
                 {
@@ -127,7 +131,10 @@ namespace Excel.Class
 
                                     foreach (Cell cell in row.Elements<Cell>()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                                     {
-                                        var str = ojbRegex.Replace(cell.InnerText.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
+
+                                        var cellValue = GetCellValue(document, cell);
+
+                                        var str = ojbRegex.Replace(cellValue.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
 
                                         if (str.ToUpper().Contains("EMAIL"))
                                         {
@@ -142,7 +149,11 @@ namespace Excel.Class
                                         {
                                             lstIndices.Add(indexCells); //Adiciona a lista de índices
                                         }
-                                        indexCells++;
+                                        if (str.ToUpper().Contains("CNPJ"))
+                                        {
+                                            IndiceCNPJCPF = indexCells;
+                                        }
+                                        indexCells++;                                        
                                     }
                                     firstRow = false;
 
@@ -153,7 +164,7 @@ namespace Excel.Class
                                     string valor = null;
                                     string area = null;
 
-                                    void RecuperarValor(List<int> lista, string v)
+                                    void RecuperarValor(List<int> lista, string v, int indiceCNPJCPF)
                                     {
                                         int indexCells = 0;
 
@@ -166,21 +177,21 @@ namespace Excel.Class
                                                 try
                                                 {
                                                     //CNPJ
-                                                    if (indexCells == 3)
+                                                    if (indexCells == indiceCNPJCPF)
                                                     {
-                                                        cnpj = cell.InnerText.ToString();
+                                                        cnpj = GetCellValue(document, cell).ToString();
                                                     }
 
                                                     //VALOR
                                                     if (item == indexCells)
                                                     {
-                                                        v = cell.InnerText.ToString();
+                                                        v = GetCellValue(document, cell).ToString();
 
                                                     }
                                                     //AREA
                                                     if (indexCells == 13)
                                                     {
-                                                        area = cell.InnerText.ToString();
+                                                        area = GetCellValue(document, cell).ToString();
                                                     }
 
                                                 }
@@ -193,7 +204,9 @@ namespace Excel.Class
                                                 // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                                 var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(v) == false;
 
-                                                if (dadosValidos)
+                                                bool cnpjValido = Regex.IsMatch(cnpj, @"^\d{14}");
+
+                                                if (cnpjValido && dadosValidos)
                                                 {
                                                     //Verificar se não consta na listablacklist.
                                                     var existe = listaBlacklist.Any(c => c.ToUpper().Trim() == v.ToUpper().Trim());
@@ -209,7 +222,7 @@ namespace Excel.Class
                                             indexCells = 0;
                                         }
                                     }
-                                    RecuperarValor(lstIndices, valor);
+                                    RecuperarValor(lstIndices, valor, IndiceCNPJCPF);
                                 }
                             }
                         }
@@ -284,7 +297,8 @@ namespace Excel.Class
 
                                     foreach (Cell cell in row.Elements<Cell>()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
                                     {
-                                        var str = ojbRegex.Replace(cell.InnerText.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
+                                        var cellValue = GetCellValue(document, cell);
+                                        var str = ojbRegex.Replace(cellValue.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
 
                                         if (dicTipo[Etipo].Any(c => c.Contains(str.ToUpper()) || str.ToUpper().Contains(c)))
                                         {
@@ -324,22 +338,18 @@ namespace Excel.Class
                                                     //CNPJ
                                                     if (indexCells == indiceCNPJ)
                                                     {
-                                                        cnpj = cell.InnerText.ToString();
+                                                        cnpj = GetCellValue(document, cell).ToString();
                                                     }
 
                                                     //VALOR
                                                     if (item == indexCells)
                                                     {
-                                                        if (cell.InnerText != "")
-                                                        {
-                                                            dado = cell.InnerText.ToString();
-                                                        }                                                      
-
+                                                        dado = GetCellValue(document, cell).ToString();
                                                     }
                                                     //AREA
                                                     if (indexCells == 13)
                                                     {
-                                                        area = cell.InnerText.ToString();
+                                                        area = GetCellValue(document, cell).ToString();
                                                     }
 
                                                 }
@@ -355,20 +365,18 @@ namespace Excel.Class
                                             // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
                                             var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
 
-                                            if (dadosValidos)
+                                            bool cnpjValido = Regex.IsMatch(cnpj, @"^\d{14}");
+
+                                            if (cnpjValido && dadosValidos)
                                             {
-                                                strategy.Execute(cnpj, dado, dtgeral, listaPendencias, area);
+                                               strategy.Execute(cnpj, dado, dtgeral, listaPendencias, area);
                                             }
                                         }
 
 
                                     }
                                     RecuperarValor(lstIndices, IndiceCNPJCPF, dado, Etipo);
-
-
                                 }
-
-
                             }
                         }
                     }
@@ -428,6 +436,23 @@ namespace Excel.Class
             }
 
             return strategy;
+        }
+
+        //=============================================================================================================================================================
+
+        public string GetCellValue(SpreadsheetDocument document, Cell cell)
+        {
+            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
+            string value = cell.CellValue.InnerXml;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+            }
+            else
+            {
+                return value;
+            }
         }
 
         //=============================================================================================================================================================

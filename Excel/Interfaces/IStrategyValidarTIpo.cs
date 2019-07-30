@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Excel.Class;
 using static Excel.Class.Funcoes;
@@ -105,14 +106,14 @@ namespace Excel.Interfaces
     public class StrategyValidacoesTipoEmailNaoClassificado : IStrategyValidações
     {
         private readonly List<string> listaBlacklist;
-        private readonly List<string> listaWordlist;
-        private readonly List<string> listaEmailList;
+        private readonly List<string> listaTipoEmailContador;
+        private readonly List<string> listaTipoEmailEmpresa;
 
         public StrategyValidacoesTipoEmailNaoClassificado(List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
         {
             this.listaBlacklist = listaBlacklist;
-            this.listaWordlist = listaWordlist;
-            this.listaEmailList = listaEmailList;
+            this.listaTipoEmailContador = listaWordlist;
+            this.listaTipoEmailEmpresa = listaEmailList;
         }
 
         public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
@@ -121,13 +122,13 @@ namespace Excel.Interfaces
             bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na emaillist
-            bool existeNaEmaillist = listaEmailList.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na wordlist
-            bool existeNaWordlist = listaWordlist.Any(c => valor.Contains(c));
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c));
 
 
-            if (existeNaWordlist == false && existeNaBlacklist == false && existeNaEmaillist == false)
+            if (existeNalistaTipoEmailContador == false && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == false)
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
             }
@@ -149,9 +150,13 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
+            bool telefoneValido = Regex.IsMatch(valor, @"^[(]{1}\d{2}[)]{1}[ ]\d{4,5}[-]\d{4}");
+
+            if (telefoneValido)
             {
                 dataTable.Rows.Add(new object[2] { cnpj, valor });
-            }
+            }          
+            
         }
     }
 
@@ -170,7 +175,14 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, DataTable dataTable, List<Tuple<string, string>> listaPendencias, string area = "")
         {
-            
+            bool nuEmpregadosValido = Regex.IsMatch(valor, @"^\d{1,10}");
+
+            if (nuEmpregadosValido == false)
+            {
+                return;
+            }
+
+
             if (area.ToUpper() == "ÁREA EMPRESÁRIO" && valor == "0")
             {
                     

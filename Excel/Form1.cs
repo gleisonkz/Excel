@@ -16,7 +16,7 @@ namespace Excel
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathlistaTipoEmailContador = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailContador.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathlistaTipoEmailEmpresa = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailEmpresa.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = $"Versão 1.0.17"; // Váriavel global para controle da versão.    
+        string versao = $"Versão 1.0.18"; // Váriavel global para controle da versão.    
         List<string> listaBlacklist = new List<string>();
         List<string> listaTipoEmailContador = new List<string>();
         List<string> listaTipoEmailEmpresa = new List<string>();
