@@ -80,60 +80,60 @@ namespace TesteExcel
         }
 
 
-        [TestMethod]
-        public void TesteEmailNaoEncontradoWordList()
-        {
-            var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "teste@feomerciomg.org.br" }, new List<string>());
+        //[TestMethod]
+        //public void TesteEmailNaoEncontradoWordList()
+        //{
+        //    var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "teste@feomerciomg.org.br" }, new List<string>());
 
-            DataTable dtgeral = new DataTable();
-            var columns = new[] { "CNPJ", "VALOR", };
-            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+        //    DataTable dtgeral = new DataTable();
+        //    var columns = new[] { "CNPJ", "VALOR", };
+        //    dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
 
-            strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
+        //    strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
 
-            Assert.IsFalse(dtgeral.Rows.Count > 0);
-        }
+        //    Assert.IsFalse(dtgeral.Rows.Count > 0);
+        //}
 
-        [TestMethod]
-        public void TesteEmailEncontradoWordListSemBlacklist()
-        {
-            var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
+        //[TestMethod]
+        //public void TesteEmailEncontradoWordListSemBlacklist()
+        //{
+        //    var strategy = new StrategyValidacoesTipoEmailContador(new List<string>(), new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
 
-            DataTable dtgeral = new DataTable();
-            var columns = new[] { "CNPJ", "VALOR", };
-            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+        //    DataTable dtgeral = new DataTable();
+        //    var columns = new[] { "CNPJ", "VALOR", };
+        //    dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
 
-            strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
+        //    strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
 
-            Assert.AreEqual(1, dtgeral.Rows.Count);
-        }
+        //    Assert.AreEqual(1, dtgeral.Rows.Count);
+        //}
 
-        [TestMethod]
-        public void TesteEmailEncontradoWordListComBlacklist()
-        {
-            var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
+        //[TestMethod]
+        //public void TesteEmailEncontradoWordListComBlacklist()
+        //{
+        //    var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string>());
 
-            DataTable dtgeral = new DataTable();
-            var columns = new[] { "CNPJ", "VALOR", };
-            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+        //    DataTable dtgeral = new DataTable();
+        //    var columns = new[] { "CNPJ", "VALOR", };
+        //    dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
 
-            strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
+        //    strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
 
-            Assert.AreEqual(0, dtgeral.Rows.Count);
-        }
-        [TestMethod]
-        public void TesteEmailEncontradoWordListSemBlacklistComEmailList()
-        {
-            var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "teste@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" });
+        //    Assert.AreEqual(0, dtgeral.Rows.Count);
+        //}
+        //[TestMethod]
+        //public void TesteEmailEncontradoWordListSemBlacklistComEmailList()
+        //{
+        //    var strategy = new StrategyValidacoesTipoEmailContador(new List<string> { "teste@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" }, new List<string> { "gleison@feomerciomg.org.br" });
 
-            DataTable dtgeral = new DataTable();
-            var columns = new[] { "CNPJ", "VALOR", };
-            dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+        //    DataTable dtgeral = new DataTable();
+        //    var columns = new[] { "CNPJ", "VALOR", };
+        //    dtgeral.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
 
-            strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
+        //    strategy.Execute("17271982000159", "gleison@feomerciomg.org.br", dtgeral);
 
-            Assert.AreEqual(0, dtgeral.Rows.Count);
-        }
+        //    Assert.AreEqual(0, dtgeral.Rows.Count);
+        //}
 
     }
 }

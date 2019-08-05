@@ -11,8 +11,10 @@ using System.Windows.Forms;
 
 namespace Excel.Class
 {
-    public class Funcoes
+    public class FuncoesNovaEstrutura
     {
+        //=============================================================================================================================================================
+
         public enum EtipoValor
         {
             Email = 1,
@@ -24,7 +26,37 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        public Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
+        public FuncoesNovaEstrutura(
+            StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail,
+            StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador,
+            StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone,
+            StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados,
+            StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado)
+        {
+            this.strategyValidacoesTipoEmail = strategyValidacoesTipoEmail;
+            this.strategyValidacoesTipoEmailContador = strategyValidacoesTipoEmailContador;
+            this.strategyValidacoesTipoTelefone = strategyValidacoesTipoTelefone;
+            this.strategyValidacoesTipoNuEmpregados = strategyValidacoesTipoNuEmpregados;
+            this.strategyValidacoesTipoEmailNaoClassificado = strategyValidacoesTipoEmailNaoClassificado;
+
+            dicStrategy = new Dictionary<EtipoValor, IStrategyValidações>
+            {
+                { EtipoValor.Email, strategyValidacoesTipoEmail },
+                { EtipoValor.EmailContador, strategyValidacoesTipoEmail },
+                { EtipoValor.EmailNaoClassificado, strategyValidacoesTipoEmail },
+                { EtipoValor.Telefone, strategyValidacoesTipoEmail },
+                { EtipoValor.NuFuncionaros, strategyValidacoesTipoEmail }
+
+            };
+        }
+
+        private readonly StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail;
+        private readonly StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador;
+        private readonly StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone;
+        private readonly StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados;
+        private readonly StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado;
+        private readonly Dictionary<EtipoValor, IStrategyValidações> dicStrategy;
+        private readonly Dictionary<EtipoValor, string[]> dicTipo = new Dictionary<EtipoValor, string[]>
         {
             { EtipoValor.Email, new [] { "EMAIL" } },
             { EtipoValor.Telefone, new [] { "TELEFONE" } },
@@ -35,34 +67,140 @@ namespace Excel.Class
 
         //=============================================================================================================================================================
 
-        public Funcoes()
+        public void LeituraDoArquivo(string caminhoPlanilhas, List<string> listaBlacklist, List<string> listaTipoEmailEmpresa, List<string> listaTipoEmailContador, List<Tuple<string,string>> ListaPendencias)
         {
+            //Criação do array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
+            string[] planilhas = Directory.GetFiles(caminhoPlanilhas, "*.xlsx");                                   
+          
+            if (caminhoPlanilhas == null)
+            {
+                MessageBox.Show("É necessario primeiro selecionar o caminho onde estão os arquivos",
+                    "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return ;
+            }
+            if (planilhas.Length == 0)
+            {
+                MessageBox.Show("Não existem planilhas no caminho selecionado",
+                    "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return ;
+            }
+
+            DataTable dtContatos = new DataTable(); 
+            var columns = new[] { "CNPJ", "VALOR", };
+            dtContatos.Columns.AddRange(columns.Select(c => new DataColumn(c)).ToArray());
+            Regex ojbRegex = new System.Text.RegularExpressions.Regex(@"\W+");
+
+            foreach (var itemPlanilha in planilhas)
+            {
+                foreach (var itemTipo in dicTipo)
+                {
+                    // open the document read-only
+                    SpreadsheetDocument document = SpreadsheetDocument.Open(itemPlanilha, false);
+                    WorkbookPart workbookPart = document.WorkbookPart;
+                    bool firstRow = true; //Variavel criada para definir que a primeira linha da planilha irá conter as colunas a serem adicionadas 
+
+                    // Cria uma lista para que sejam armazenados os índices.
+                    var lstIndices = new List<int>();
+                    var indiceCNPJCPF = 0;
+
+                    foreach (WorksheetPart worksheetPart in document.WorkbookPart.WorksheetParts)
+                    {
+                        foreach (SheetData sheetData in worksheetPart.Worksheet.Elements<SheetData>())
+                        {
+                            if (sheetData.HasChildren)
+                            {
+                                foreach (Row row in sheetData.Elements<Row>())
+                                {
+                                    if (firstRow)
+                                    {
+                                        int indexCells = 0; // Variavel criada para controlar o índice da celula
+
+                                        foreach (Cell cell in row.Elements<Cell>()) //Percorre por todas as celulas da linha para encontrar o(s) índice(s) que contem a palavra E-MAIL
+                                        {
+                                            var cellValue = GetCellValue(document, cell);
+                                            var str = ojbRegex.Replace(cellValue.ToString().RemoverAcentuacao(), ""); //Recupera o valor da celula removendo os caracteres especiais e acentuações
+
+                                            if (itemTipo.Value.Any(c => c.Contains(str.ToUpper()) || str.ToUpper().Contains(c)))
+                                            {
+                                                lstIndices.Add(indexCells); //Adiciona a lista de índices
+                                            }
+
+                                            if (str.ToUpper().Contains("CNPJ"))
+                                            {
+                                                indiceCNPJCPF = indexCells;
+                                            }
+
+                                            indexCells++;
+                                        }
+                                        firstRow = false;
+                                    }
+                                    else // Percorre o restante das linhas para recuperar os valores dos índices identificados
+                                    {
+                                        string cnpj = null;
+                                        string dado = null;
+                                        string area = null;
+
+                                        void RecuperarValor(List<int> lista, int indiceCNPJ, string valor)
+                                        {
+                                            int indexCells = 0;
+
+                                            //Loop para percorrer as celulas da linha por cada índice encontrado e recuperar os valores da celula.
+                                            foreach (var item in lista)
+                                            {
+
+                                                foreach (Cell cell in row.Elements<Cell>())
+                                                {
+                                                    try
+                                                    {
+                                                        //CNPJ
+                                                        if (indexCells == indiceCNPJ)
+                                                        {
+                                                            cnpj = GetCellValue(document, cell).ToString();
+                                                        }
+
+                                                        //VALOR
+                                                        if (item == indexCells)
+                                                        {
+                                                            dado = GetCellValue(document, cell).ToString();
+                                                        }
+                                                        //AREA
+                                                        if (indexCells == 13)
+                                                        {
+                                                            area = GetCellValue(document, cell).ToString();
+                                                        }
+
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        throw ex;
+                                                    }
+                                                    indexCells++;
+                                                }
+
+                                                indexCells = 0;
+
+                                                // Verifica se os campos de CNPJ e VALOR são diferentes de nulo e vazio.
+                                                var dadosValidos = string.IsNullOrEmpty(cnpj) == false && string.IsNullOrEmpty(dado) == false;
+
+                                                bool cnpjValido = Regex.IsMatch(cnpj, @"^\d{14}");
+
+                                                if (cnpjValido && dadosValidos)
+                                                {
+                                                    var strategy = dicStrategy[itemTipo.Key];
+                                                    strategy.Execute(cnpj, dado, area);
+                                                }
+                                            }
+                                        }
+                                        RecuperarValor(lstIndices, indiceCNPJCPF, dado);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    document.Dispose();
+                }
+            }            
         }
-
-        //=============================================================================================================================================================
-
-        public Funcoes(StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail,
-                       StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador,
-                       StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone,
-                       StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados,
-                       StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado,
-                       List<Tuple<string, string>> listaPendencias
-                       )
-        {
-            this.strategyValidacoesTipoEmail = strategyValidacoesTipoEmail;
-            this.strategyValidacoesTipoEmailContador = strategyValidacoesTipoEmailContador;
-            this.strategyValidacoesTipoTelefone = strategyValidacoesTipoTelefone;
-            this.strategyValidacoesTipoNuEmpregados = strategyValidacoesTipoNuEmpregados;
-            this.strategyValidacoesTipoEmailNaoClassificado = strategyValidacoesTipoEmailNaoClassificado;
-            this.listaPendencias = listaPendencias;
-        }
-
-        private readonly StrategyValidacoesTipoEmailEmpresa strategyValidacoesTipoEmail;
-        private readonly StrategyValidacoesTipoEmailContador strategyValidacoesTipoEmailContador;
-        private readonly StrategyValidacoesTipoTelefone strategyValidacoesTipoTelefone;
-        private readonly StrategyValidacoesTipoNuEmpregados strategyValidacoesTipoNuEmpregados;
-        private readonly StrategyValidacoesTipoEmailNaoClassificado strategyValidacoesTipoEmailNaoClassificado;
-        private readonly List<Tuple<string, string>> listaPendencias;
 
         //=============================================================================================================================================================
 
@@ -244,8 +382,6 @@ namespace Excel.Class
             //Cria um array contendo o caminho dos arquivos da pasta selecionada pelo usuário.
             string[] planilhas = Directory.GetFiles(caminho, "*.xlsx");
 
-            var strategy = CreateStrategyValidações(Etipo, listaBlacklist, listaWordlist, listaEmaillist);
-
             if (caminho == null)
             {
                 MessageBox.Show("É necessario primeiro selecionar o caminho onde estão os arquivos",
@@ -409,35 +545,33 @@ namespace Excel.Class
         ///<summary>
         ///Cria a estratégia de validações acordo com tipo informado.
         ///</summary>
-        private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
-        {
-            IStrategyValidações strategy = null;
+        //private IStrategyValidações CreateStrategyValidações(EtipoValor etipoValor, List<string> listaBlacklist, List<string> listaWordlist, List<string> listaEmailList)
+        //{
+        //    IStrategyValidações strategy = null;
 
-            //switch (etipoValor)
-            //{
-            //    case EtipoValor.Email:
-            //        strategy = new StrategyValidacoesTipoEmailEmpresa(listaBlacklist, listaWordlist, listaEmailList, listaPendencias);
-            //        break;
-            //    case EtipoValor.NuFuncionaros:
-            //        strategy = new StrategyValidacoesTipoNuEmpregados(listaBlacklist, listaWordlist);
-            //        break;
-            //    case EtipoValor.Telefone:
-            //        strategy = new StrategyValidacoesTipoTelefone(listaBlacklist, listaWordlist);
-            //        break;
-            //    case EtipoValor.EmailContador:
-            //        strategy = new StrategyValidacoesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList, listaPendencias);
-            //        break;
-            //    case EtipoValor.EmailNaoClassificado:
-            //        strategy = new StrategyValidacoesTipoEmailNaoClassificado(listaBlacklist, listaWordlist, listaEmailList);
-            //        break;
-            //    default:
-            //        break;
-            //}
+        //    switch (etipoValor)
+        //    {              
+        //        case EtipoValor.Email:
+        //            strategy =  new StrategyValidacoesTipoEmailEmpresa(listaBlacklist,listaWordlist,listaEmailList, listaPendencias);
+        //            break;
+        //        case EtipoValor.NuFuncionaros:
+        //            strategy = new  StrategyValidacoesTipoNuEmpregados(listaBlacklist, listaWordlist);
+        //            break;
+        //        case EtipoValor.Telefone:
+        //            strategy = new StrategyValidacoesTipoTelefone(listaBlacklist, listaWordlist);
+        //            break;
+        //        case EtipoValor.EmailContador:
+        //            strategy = new StrategyValidacoesTipoEmailContador(listaBlacklist, listaWordlist, listaEmailList, listaPendencias);
+        //            break;
+        //        case EtipoValor.EmailNaoClassificado:
+        //            strategy = new StrategyValidacoesTipoEmailNaoClassificado(listaBlacklist, listaWordlist, listaEmailList);
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            //return strategy;
-
-            throw new NotImplementedException();
-        }
+        //    return strategy;
+        //}
 
         //=============================================================================================================================================================
 
