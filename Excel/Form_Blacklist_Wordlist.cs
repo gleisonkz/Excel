@@ -7,18 +7,13 @@ namespace Excel
 {
     public partial class Form_Blacklist_Wordlist : Form
     {
-        private readonly List<string> listaBlacklist;
-        private readonly Funcoes objFuncoes;
+        private readonly HashSet<string> listaBlacklist;
+        private readonly FuncoesNovaEstrutura objFuncoes;
 
         public bool Editando { get; set; }
         public int Tipo { get; set; }
 
-        //public Form_Blacklist()
-        //{
-        //    //InitializeComponent();
-        //}   
-
-        public Form_Blacklist_Wordlist(List<string> listaBlacklist, Funcoes objFuncoes ,int tipo)
+        public Form_Blacklist_Wordlist(HashSet<string> listaBlacklist, FuncoesNovaEstrutura objFuncoes ,int tipo)
         {
             InitializeComponent();
             this.listaBlacklist = listaBlacklist;
@@ -41,14 +36,14 @@ namespace Excel
             {
                 label_itens.Text = $"Lista de emails/palavras registradas:";
                 label_textbox.Text = $"Palavra:";
-                this.Text = "ListaTipoContador - Inserir/Editar";
+                this.Text = "ListaTipoEmailContador - Inserir/Editar";
             }
 
             if (Tipo == 3)
             {
                 label_itens.Text = $"Lista de emails registrados:";
                 label_textbox.Text = $"Email:";
-                this.Text = "ListaTipoEmpresa - Inserir/Editar";
+                this.Text = "ListaTipoEmailEmpresa - Inserir/Editar";
             }
         } 
 
@@ -70,7 +65,7 @@ namespace Excel
             }
             else
             {
-                listaBlacklist[ltb_emails.SelectedIndex] = valor;
+                //listaBlacklist[ltb_emails.SelectedIndex] = valor;
                 AtualizarListBox();
             }
 
@@ -107,7 +102,6 @@ namespace Excel
             ltb_emails.SelectedIndex = -1;
             text_valor.Focus();
             Editando = false;
-
         }
 
         private void Btn_cancelar_Click(object sender, EventArgs e)
@@ -137,7 +131,6 @@ namespace Excel
         {
             listaBlacklist.Remove(valor);
             AtualizarListBox();
-
         }
 
         private void Btn_apagar_Click(object sender, EventArgs e)

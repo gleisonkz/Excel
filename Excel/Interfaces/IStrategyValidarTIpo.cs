@@ -19,11 +19,14 @@ namespace Excel.Interfaces
 
     public class StrategyValidacoesTipoEmailEmpresa : IStrategyValidações
     {
-        private readonly List<string> listaBlacklist;
-        private readonly List<string> listaTipoEmailContador;
-        private readonly List<string> listaTipoEmailEmpresa;
+        private readonly HashSet<string> listaBlacklist;
+        private readonly HashSet<string> listaTipoEmailContador;
+        private readonly HashSet<string> listaTipoEmailEmpresa;
         private readonly List<Tuple<string, string>> listaPendencias;
         private readonly List<Contato> listaContatos;
+
+        HashSet<string> hasSet = new HashSet<string>();
+
 
         public StrategyValidacoesTipoEmailEmpresa(IDados obj)
         {
@@ -36,14 +39,21 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, string area)
         {
+            bool isEmail = Regex.IsMatch(valor, @"^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+
+            if (isEmail == false)
+            {
+                return;
+            }
+
             //Verifica se o e-mail consta na blacklist
-            bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNaBlacklist = listaBlacklist.Contains(valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na lista de email tipo empresa
-            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Contains(valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na lista de email tipo contador
-            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c));
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => c == valor.ToUpper().Trim());
 
 
             if (existeNalistaTipoEmailContador == false && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == true)
@@ -54,7 +64,7 @@ namespace Excel.Interfaces
 
             if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
             {
-                var item = new Tuple<string, string>( cnpj, valor + '\t' + "Registro existente nas duas listas de classificações" );
+                var item = new Tuple<string, string>(cnpj, valor + '\t' + "Registro existente nas duas listas de classificações");
                 listaPendencias.Add(item);
             }
         }
@@ -64,9 +74,9 @@ namespace Excel.Interfaces
 
     public class StrategyValidacoesTipoEmailContador : IStrategyValidações
     {
-        private readonly List<string> listaBlacklist;
-        private readonly List<string> listaTipoEmailContador;
-        private readonly List<string> listaTipoEmailEmpresa;
+        private readonly HashSet<string> listaBlacklist;
+        private readonly HashSet<string> listaTipoEmailContador;
+        private readonly HashSet<string> listaTipoEmailEmpresa;
         private readonly List<Tuple<string, string>> listaPendencias;
         private readonly List<Contato> listaContatos;
 
@@ -81,26 +91,32 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, string area)
         {
+            bool isEmail = Regex.IsMatch(valor, @"^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+
+            if (isEmail == false)
+            {
+                return;
+            }
+
             //Verifica se o e-mail consta na blacklist
-            bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNaBlacklist = listaBlacklist.Contains(valor.ToUpper().Trim());
 
-            //Verifica se o e-mail consta na emaillist
-            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            //Verifica se o e-mail consta na lista de email tipo empresa
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Contains(valor.ToUpper().Trim());
 
-            //Verifica se o e-mail consta na wordlist
-            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c)); 
+            //Verifica se o e-mail consta na lista de email tipo contador
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => c == valor.ToUpper().Trim());
 
+
+            //Verifica se o registro consta nas duas listas e ignora pois já é tratado no primeiro strategy.
+            if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
+            {
+                return;
+            }
 
             if (existeNalistaTipoEmailContador == true && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == false)
             {
-                //dataTable.Rows.Add(new object[2] { cnpj, valor }); //adiociona ao DataTable
                 listaContatos.Add(new Contato { CPFCNPJ = cnpj, Tipo = EtipoValor.EmailContador, Valor = valor });
-            }
-
-            if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
-            {
-                var item = new Tuple<string, string>(cnpj, valor);
-                listaPendencias.Add(item);
             }
         }
     }
@@ -109,9 +125,9 @@ namespace Excel.Interfaces
 
     public class StrategyValidacoesTipoEmailNaoClassificado : IStrategyValidações
     {
-        private readonly List<string> listaBlacklist;
-        private readonly List<string> listaTipoEmailContador;
-        private readonly List<string> listaTipoEmailEmpresa;
+        private readonly HashSet<string> listaBlacklist;
+        private readonly HashSet<string> listaTipoEmailContador;
+        private readonly HashSet<string> listaTipoEmailEmpresa;
         private readonly List<Contato> listaContatos;
 
         public StrategyValidacoesTipoEmailNaoClassificado(IDados obj)
@@ -124,15 +140,27 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, string area)
         {
+            bool isEmail = Regex.IsMatch(valor, @"^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+
+            if (isEmail == false)
+            {
+                return;
+            }
+
             //Verifica se o e-mail consta na blacklist
-            bool existeNaBlacklist = listaBlacklist.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNaBlacklist = listaBlacklist.Contains(valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na lista de email tipo empresa
-            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Any(c => c.ToUpper().Trim() == valor.ToUpper().Trim());
+            bool existeNalistaTipoEmailEmpresa = listaTipoEmailEmpresa.Contains(valor.ToUpper().Trim());
 
             //Verifica se o e-mail consta na lista de email tipo contador
-            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => valor.Contains(c));
+            bool existeNalistaTipoEmailContador = listaTipoEmailContador.Any(c => c == valor.ToUpper().Trim());
 
+            //Verifica se o registro consta nas duas listas e ignora pois já é tratado no primeiro strategy.
+            if (existeNaBlacklist == false && existeNalistaTipoEmailContador == true && existeNalistaTipoEmailEmpresa == true)
+            {
+                return;
+            }
 
             if (existeNalistaTipoEmailContador == false && existeNaBlacklist == false && existeNalistaTipoEmailEmpresa == false)
             {
@@ -162,8 +190,8 @@ namespace Excel.Interfaces
             {
                 //dataTable.Rows.Add(new object[2] { cnpj, valor });
                 listaContatos.Add(new Contato { CPFCNPJ = cnpj, Tipo = EtipoValor.Telefone, Valor = valor });
-            }         
-            
+            }
+
         }
     }
 
@@ -180,22 +208,27 @@ namespace Excel.Interfaces
 
         public void Execute(string cnpj, string valor, string area)
         {
-            bool nuEmpregadosValido = Regex.IsMatch(valor, @"^\d{1,10}");
+            bool nuEmpregadosValido = Regex.IsMatch(valor, @"^\d{1,10}$");
 
             if (nuEmpregadosValido == false)
             {
                 return;
             }
 
+            if (area == null)
+            {
+                area = "null";
+            }
+
             if (area.ToUpper() == "ÁREA EMPRESÁRIO" && valor == "0")
             {
-                    
+
             }
             else
             {
                 //dataTable.Rows.Add(new object[2] { cnpj, valor });
                 listaContatos.Add(new Contato { CPFCNPJ = cnpj, Tipo = EtipoValor.NuFuncionaros, Valor = valor });
-            }            
+            }
         }
     }
 

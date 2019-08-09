@@ -3,54 +3,55 @@ using Excel.Class;
 using Excel.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using static Excel.Class.FuncoesNovaEstrutura;
 
 namespace Excel
 {
     public partial class Form1 : Form, IDados
     {
-        Funcoes objFuncoes = new Funcoes(); // Instanciação da Classe Funções.
         FuncoesNovaEstrutura objFuncoesNovaestrutura = null; // Instanciação da Classe Funções.
         string selectedFolder = null; // Váriavel goblal utilizada para armazenar a caminho da pasta selecionada.
         string pathBlacklist = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}blacklist.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathlistaTipoEmailContador = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailContador.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
         string pathlistaTipoEmailEmpresa = $"{ AppDomain.CurrentDomain.BaseDirectory.ToString()}listaTipoEmailEmpresa.txt"; // Váriavel goblal utilizada para armazenar a caminho da blacklist.
-        string versao = $"Versão 1.0.18"; // Váriavel global para controle da versão.    
+        string versao = $"Versão 2.0.0"; // Váriavel global para controle da versão.    
 
-        public List<string> ListaBlacklist { get; set; }
-        public List<string> ListaTipoEmailContador { get; set; }
-        public List<string> ListaTipoEmailEmpresa { get; set; }
-        public List<Tuple<string, string>> ListaPendencias { get; set; }
-        public List<Contato> ListaContato { get; }
+        public HashSet<string> ListaBlacklist { get; set; } = new HashSet<string>();
+        public HashSet<string> ListaTipoEmailContador { get; set; } = new HashSet<string>();
+        public HashSet<string> ListaTipoEmailEmpresa { get; set; } = new HashSet<string>();
+        public List<Tuple<string, string>> ListaPendencias { get; set; } = new List<Tuple<string, string>>();
+        public List<Contato> ListaContato { get; } = new List<Contato>();
 
         //=============================================================================================================================================================
 
         public Form1()
         {
             InitializeComponent();
-            label_versao.Text = versao; // atribui a versão na label.     
-            objFuncoesNovaestrutura = Program.Container.Resolve<FuncoesNovaEstrutura>();
+            label_versao.Text = versao; // atribui a versão na label.              
         }
 
         //=============================================================================================================================================================
 
-        public void GravarListaNoArquivo(List<string> lista, string path)
+        public void GravarListaNoArquivo(HashSet<string> lista, string path)
         {
             var sw = new StreamWriter(path, false, Encoding.Default);
 
             foreach (var item in lista)
             {
-                sw.WriteLine(item);
+                sw.WriteLine(item.ToUpper().Trim());
             }
             sw.Dispose();
         }
 
         //=============================================================================================================================================================
 
-        public void CarregaArquivoParaLista(List<string> lista, string path)
+        public void CarregaArquivoParaLista(HashSet<string> lista, string path)
         {
             try
             {
@@ -67,7 +68,7 @@ namespace Excel
 
                     if (item.IsNullOrEmpty() == false)
                     {
-                        lista.Add(item);
+                        lista.Add(item.ToUpper().Trim());
                     }
                 }
                 sr.Dispose();
@@ -85,42 +86,31 @@ namespace Excel
         {
             try
             {
-                //Recebe os DataTable de cada tipo e atribui a uma variavel.
-                var dtEmailTipoEmpresa = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Email, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
-                var dtEmailTipoContador = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailContador, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
-                var dtEmailTipoNaoClassificado = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.EmailNaoClassificado, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
-                var dtTelefone = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.Telefone, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
-                var dtNuEmpregados = objFuncoes.PreencheDataTableOpenXML(selectedFolder, Funcoes.EtipoValor.NuFuncionaros, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
+                string caminhoTxtPendencias = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_Pendencias - Qtd {ListaPendencias.Distinct().ToList().Count}.txt");
+                Dictionary<EtipoValor, string> dicListaDados = new Dictionary<EtipoValor, string>();
+                //dicListaDados.Add(EtipoValor.Email, caminhoTxtEmailTipoEmpresa);
+                List<EtipoValor> lst = Enum.GetValues(typeof(EtipoValor)).Cast<EtipoValor>().ToList();
+                Type type = typeof(EtipoValor);
 
-                //if (dtEmailTipoEmpresa.Rows.Count == 0 && dtEmailTipoContador.Rows.Count == 0 && dtTelefone.Rows.Count == 0 && dtNuEmpregados.Rows.Count == 0)
-                //{
-                //    MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    return;
-                //}
+                foreach (var itemEnumerado in lst)
+                {
+                    var attr2 = type.GetField(itemEnumerado.ToString())
+                                    .GetCustomAttributes(false)
+                                    .OfType<EtipoValorAttribute>()
+                                    .Single();
 
-                //Cria os endereço e nomes dos arquivos que serão salvos.
-                string caminhoTxtEmailTipoEmpresa = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-EMPRESA - Qtd {dtEmailTipoEmpresa.Rows.Count}.txt");
-                string caminhoTxtEmailTipoContador = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-CONTADOR - Qtd {dtEmailTipoContador.Rows.Count}.txt");
-                string caminhoTxtEmailNaoClassificado = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_EMAIL-NÃO_CLASSIFICADO - Qtd {dtEmailTipoNaoClassificado.Rows.Count}.txt");
-                string caminhoTxtTelefone = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_TELEFONES - Qtd {dtTelefone.Rows.Count}.txt");
-                string caminhoTxtNuEmpregados = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_NuEmpregados - Qtd {dtNuEmpregados.Rows.Count}.txt");
-                string caminhoTxtPendencias = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_Pendencias - Qtd {ListaPendencias.Count}.txt");
-
-
-
-                //Faz a criação dos arquivos de texto e inserção dos dados.
-                objFuncoes.Write(dtEmailTipoEmpresa, caminhoTxtEmailTipoEmpresa);
-                objFuncoes.Write(dtEmailTipoContador, caminhoTxtEmailTipoContador);
-                objFuncoes.Write(dtTelefone, caminhoTxtTelefone);
-                objFuncoes.Write(dtNuEmpregados, caminhoTxtNuEmpregados);
-                objFuncoes.Write(dtEmailTipoNaoClassificado, caminhoTxtEmailNaoClassificado);
+                    var lstContato = ListaContato.Where(c => c.Tipo == itemEnumerado).Distinct().ToList();
+                    var path = (selectedFolder + $@"\Exported_at_{DateTime.Now.ToString("dd-MM-yyyy")}_as_{DateTime.Now.ToString("H'h'mm")}_{attr2.Descricao} - Qtd {lstContato.Count}.txt");
+                    objFuncoesNovaestrutura.Write(lstContato, path);
+                }
 
                 if (ListaPendencias.Count > 0)
                 {
-                    var dtPendencias = ListaPendencias.ToDataTable();
-                    objFuncoes.Write(dtPendencias, caminhoTxtPendencias);
+                    var listaSemDuplicados = ListaPendencias.Distinct().ToList();
+                    List<Contato> listaPendencias = new List<Contato>();
+                    listaSemDuplicados.ForEach(a => listaPendencias.Add(new Contato { CPFCNPJ = a.Item1, Tipo = EtipoValor.Email, Valor = a.Item2 }));
+                    objFuncoesNovaestrutura.Write(listaPendencias, caminhoTxtPendencias);
                 }
-
             }
             catch (Exception ex)
             {
@@ -135,6 +125,7 @@ namespace Excel
 
         private void BtnAbrirClick(object sender, EventArgs e)
         {
+            ListaContato.Clear();
             FolderBrowserDialog Abrir = new FolderBrowserDialog(); //Instanciação da classe para abrir caixa de dialogo.
             Abrir.RootFolder = Environment.SpecialFolder.Desktop; //Defini o local padrão onde será aberto a caixa de dialogo.
             var result = Abrir.ShowDialog();
@@ -146,30 +137,71 @@ namespace Excel
             selectedFolder = Abrir.SelectedPath; //Atribui o caminho selecionado em uma variavel.
             label_caminhoEscolhido.Text = selectedFolder; //Exibe o caminho selecionado na label.
 
-            var dtContatos = objFuncoesNovaestrutura.LeituraDoArquivo(selectedFolder, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
 
-            //var dtgeral = objFuncoes.PreencheDataTableOpenXML(selectedFolder, ListaBlacklist, ListaTipoEmailContador); //Chama o metodo responsável por preencher o DataTable.
-
-            if (dtContatos.Rows.Count == 0 || dtContatos == null)
+            Thread threadAbrir = new Thread(new ThreadStart(() =>
             {
-                MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                try
+                {
+                    System.Threading.Thread.Sleep(2000);
+                    Action inicio = () =>
+                    {
+                        BtnExportar.Enabled = false; //Habilita o botão de exportar.
+                    };
 
-            BtnExportar.Enabled = true; //Habilita o botão de exportar.
-            BtnExportar.Focus(); //Move o tabindex para o botão exportar.
-            dataGridView1.DataSource = dtContatos; //Adiciona os valores do DataTable ao Grid.
+                    this.Invoke(inicio);
+
+                    objFuncoesNovaestrutura.LeituraDoArquivo(selectedFolder, ListaBlacklist, ListaTipoEmailContador, ListaTipoEmailEmpresa, ListaPendencias);
+
+                    if (ListaContato.Count == 0)
+                    {
+                        Action message = () =>
+                        {
+                            MessageBox.Show("Não foi retornado nenhum registro das planilhas do caminho especificado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        };
+
+                        this.Invoke(message);
+                        return;
+                    }
+
+                    Action final = () =>
+                    {
+                        BtnExportar.Enabled = true; //Habilita o botão de exportar.
+                        BtnExportar.Focus(); //Move o tabindex para o botão exportar.
+                        contatoBindingSource.Clear();
+                        contatoBindingSource.DataSource = ListaContato.Distinct(); //Adiciona os valores da lista no Grid.                        
+                        dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                    };
+
+                    this.Invoke(final);
+                }
+                catch (Exception ex)
+                {
+                    Action message = () =>
+                    {
+                        MessageBox.Show($"Houve o seguinte erro {ex.Message}");
+                    };
+                    this.Invoke(message);
+                }
+            }));
+
+            threadAbrir.Start();
         }
 
         //=============================================================================================================================================================
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+
             try
             {
                 CarregaArquivoParaLista(ListaBlacklist, pathBlacklist);
                 CarregaArquivoParaLista(ListaTipoEmailContador, pathlistaTipoEmailContador);
                 CarregaArquivoParaLista(ListaTipoEmailEmpresa, pathlistaTipoEmailEmpresa);
+                this.objFuncoesNovaestrutura = Program.Container.Resolve<FuncoesNovaEstrutura>();
+
+                this.objFuncoesNovaestrutura.OnProcessPlan += ObjFuncoesNovaestrutura_OnProcessPlan;
+                this.objFuncoesNovaestrutura.OnProgressPlan += ObjFuncoesNovaestrutura_OnProgressPlan;
             }
             catch (Exception ex)
             {
@@ -179,11 +211,48 @@ namespace Excel
 
         //=============================================================================================================================================================
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = MessageBox.Show("Tem certeza que deseja fechar?", "", MessageBoxButtons.YesNo) == DialogResult.No;
+            base.OnClosing(e);
+        }
+
+        //=============================================================================================================================================================
+
+        protected override void OnClosed(EventArgs e)
+        {
+            this.objFuncoesNovaestrutura.OnProcessPlan -= ObjFuncoesNovaestrutura_OnProcessPlan;
+            this.objFuncoesNovaestrutura.OnProgressPlan -= ObjFuncoesNovaestrutura_OnProgressPlan;
+
+            base.OnClosed(e);
+        }
+
+        //=============================================================================================================================================================
+
+        private void ObjFuncoesNovaestrutura_OnProgressPlan(string arg1, int arg2)
+        {
+            Action progress = () =>
+            {
+                this.toolStripProgressBar1.Value = arg2 > 100 ? 100 : arg2;
+            };
+
+            this.Invoke(progress);
+        }
+
+        //=============================================================================================================================================================
+
+        private void ObjFuncoesNovaestrutura_OnProcessPlan(int arg1, int arg2)
+        {
+
+        }
+
+        //=============================================================================================================================================================
+                
         private void BtnBlacklistClick(object sender, EventArgs e)
         {
             try
             {
-                var n = new Form_Blacklist_Wordlist(ListaBlacklist, objFuncoes, 1);
+                var n = new Form_Blacklist_Wordlist(ListaBlacklist, objFuncoesNovaestrutura, 1);
                 n.ShowDialog();
                 GravarListaNoArquivo(ListaBlacklist, pathBlacklist);
             }
@@ -199,7 +268,7 @@ namespace Excel
         {
             try
             {
-                var n = new Form_Blacklist_Wordlist(ListaTipoEmailContador, objFuncoes, 2);
+                var n = new Form_Blacklist_Wordlist(ListaTipoEmailContador, objFuncoesNovaestrutura, 2);
                 n.ShowDialog();
                 GravarListaNoArquivo(ListaTipoEmailContador, pathlistaTipoEmailContador);
             }
@@ -215,7 +284,7 @@ namespace Excel
         {
             try
             {
-                var n = new Form_Blacklist_Wordlist(ListaTipoEmailEmpresa, objFuncoes, 3);
+                var n = new Form_Blacklist_Wordlist(ListaTipoEmailEmpresa, objFuncoesNovaestrutura, 3);
                 n.ShowDialog();
                 GravarListaNoArquivo(ListaTipoEmailEmpresa, pathlistaTipoEmailEmpresa);
             }

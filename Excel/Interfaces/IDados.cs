@@ -9,10 +9,10 @@ namespace Excel.Interfaces
 {
     public interface IDados
     {
-       List<string> ListaBlacklist { get; set; }
-       List<string> ListaTipoEmailContador { get; set; }
-       List<string> ListaTipoEmailEmpresa { get; set; }
-       List<Tuple<string, string>> ListaPendencias { get; set; }
-       List<Contato> ListaContato { get; }
+        HashSet<string> ListaBlacklist { get; set; }
+        HashSet<string> ListaTipoEmailContador { get; set; }
+        HashSet<string> ListaTipoEmailEmpresa { get; set; }
+        List<Tuple<string, string>> ListaPendencias { get; set; }
+        List<Contato> ListaContato { get; }
     }
 }
